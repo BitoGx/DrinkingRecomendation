@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  android:layout_marginHorizontal="@dimen/activity_horizontal_margin"
+  android:layout_marginVertical="@dimen/activity_vertical_margin"
+  android:orientation="vertical"
+  tools:context=".UpdateProfilActivity">
+
+  <EditText
+    android:id="@+id/et_upprofile_email"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:autofillHints="@string/email"
+    android:ems="10"
+    android:hint="@string/email"
+    android:inputType="textEmailAddress" />
+
+  <EditText
+    android:id="@+id/et_upprofile_nama"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:autofillHints="@string/nama_lengkap"
+    android:ems="10"
+    android:hint="@string/nama_lengkap"
+    android:inputType="textPersonName" />
+
+  <EditText
+    android:id="@+id/et_upprofile_ttl"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:autofillHints="@string/tanggal_lahir"
+    android:cursorVisible="false"
+    android:ems="10"
+    android:focusable="false"
+    android:hint="@string/tanggal_lahir"
+    android:inputType="none" />
+
+  <EditText
+    android:id="@+id/et_upprofile_rekomendasipersonal"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:autofillHints="@string/rekomendasi_personal"
+    android:cursorVisible="false"
+    android:ems="10"
+    android:focusable="false"
+    android:hint="@string/rekomendasi_personal"
+    android:inputType="none" />
+
+  <EditText
+    android:id="@+id/et_upprofile_tinggi"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:autofillHints="@string/tinggi_badan"
+    android:ems="10"
+    android:hint="@string/tinggi_badan"
+    android:inputType="number" />
+
+  <EditText
+    android:id="@+id/et_upprofile_berat"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:autofillHints="@string/berat_badan"
+    android:ems="10"
+    android:hint="@string/berat_badan"
+    android:inputType="number" />
+
+  <Button
+    android:id="@+id/btn_upprofile_update"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="30dp"
+    android:text="@string/update"
+    style="?android:attr/buttonBarButtonStyle"/>
+</LinearLayout>

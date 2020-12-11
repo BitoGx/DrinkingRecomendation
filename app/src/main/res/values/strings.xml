@@ -1,0 +1,66 @@
+<resources>
+  <string name="app_name">DrinkingRecomendation</string>
+  <string name="activity_in_vehicle">In Vehicle</string>
+  <string name="activity_on_bicycle">On Bicycle</string>
+  <string name="activity_on_foot">On Foot</string>
+  <string name="activity_running">Running</string>
+  <string name="activity_still">Still</string>
+  <string name="activity_tilting">Tilting</string>
+  <string name="activity_walking">walking</string>
+  <string name="activity_unknown">Unknown</string>
+  <string name="navigation_drawer_open">Open Navigation Drawer</string>
+  <string name="navigation_drawer_close">Close Navigation Drawer</string>
+  <string name="hello_blank_fragment">Hello blank fragment</string>
+  <string name="support_email">support@bitocode.web.id</string>
+  <string name="register">Register</string>
+  <string name="email">Email</string>
+  <string name="password">Password</string>
+  <string name="nama_lengkap">Nama Lengkap</string>
+  <string name="tanggal_lahir">Tanggal Lahir</string>
+  <string name="jenis_kelamin">Jenis Kelamin</string>
+  <string name="pria">Pria</string>
+  <string name="wanita">Wanita</string>
+  <string name="tinggi_badan">Tinggi Badan (cm)</string>
+  <string name="berat_badan">Berat Badan (kg)</string>
+  <string name="back">Back</string>
+  <string name="validasi_tanggal">Maaf tanggal tidak valid</string>
+
+  <string name="title_activity_welcome">Home Screen</string>
+  <string name="next">NEXT</string>
+  <string name="skip">SKIP</string>
+  <string name="start">GOT IT</string>
+
+  <string name="slide_1_title">Running</string>
+  <string name="slide_1_desc">The easiest way to record your run</string>
+
+  <string name="slide_2_title">Walking</string>
+  <string name="slide_2_desc">Will try to detect when you running or walking</string>
+
+  <string name="slide_3_title">Cycling</string>
+  <string name="slide_3_desc">It also can detect when you are cyling with your bike</string>
+
+  <string name="play_again_desc">To see the welcome slider again, goto Settings -> apps -> welcome slider -> clear data</string>
+  <string name="play_again">Play Again</string>
+  <string name="appicon">AppIcon</string>
+  <string name="login">Login</string>
+  <string name="lupa_password_klik_disini">Lupa password klik disini</string>
+  <string name="username">Username</string>
+  <string name="create_new_account">Create New Account ?</string>
+  <string name="lupa_password">Lupa Password</string>
+  <string name="confirm">Confirm</string>
+  <string name="lupa_pass_desc">Masukkan email atau username anda</string>
+  <string name="email_username">Email/Username</string>
+  <string name="menu_pengaturan">Pengaturan</string>
+  <string name="menu_keluar">Keluar</string>
+  <string name="menu_update_profil">Update Profil</string>
+  <string name="menu_ganti_password">Ganti Password</string>
+  <string name="menu_dashboard">Dashboard</string>
+  <string name="menu_rekomendasi">Rekomendasi</string>
+  <string name="menu_riwayat">Riwayat</string>
+  <string name="menu_activity_recognition">Activity Recognition</string>
+  <string name="password_lama">Password Lama</string>
+  <string name="password_baru">Password Baru</string>
+  <string name="ulangi_password_baru">Ulangi Password Baru</string>
+  <string name="update">Update</string>
+  <string name="rekomendasi_personal">Rekomendasi Personal (ml)</string>
+</resources>

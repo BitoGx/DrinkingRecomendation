@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  android:layout_marginHorizontal="@dimen/activity_horizontal_margin"
+  android:layout_marginVertical="@dimen/activity_vertical_margin"
+  android:orientation="vertical"
+  tools:context=".LoginActivity">
+
+  <ImageView
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="150dp"
+    android:contentDescription="@string/appicon"
+    android:src="@mipmap/ic_launcher_round" />
+
+  <TextView
+    android:id="@+id/tv_log_register"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:text="@string/login"
+    android:textSize="30sp" />
+
+  <EditText
+    android:id="@+id/et_log_username"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:ems="10"
+    android:inputType="text"
+    android:hint="@string/username"
+    android:autofillHints="@string/username"/>
+
+  <EditText
+    android:id="@+id/et_log_password"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:ems="10"
+    android:inputType="textPassword"
+    android:hint="@string/password"
+    android:autofillHints="@string/password" />
+
+  <TextView
+    android:id="@+id/tv_log_lupapassword"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="15dp"
+    android:gravity="end"
+    android:text="@string/lupa_password_klik_disini" />
+
+  <LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal">
+
+    <Button
+      android:id="@+id/btn_log_registrasi"
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="20dp"
+      android:layout_weight="1"
+      android:text="@string/create_new_account"
+      style="?android:attr/buttonBarButtonStyle"/>
+
+    <Button
+      android:id="@+id/btn_log_login"
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="20dp"
+      android:layout_weight="1"
+      android:text="@string/login"
+      style="?android:attr/buttonBarButtonStyle"/>
+  </LinearLayout>
+
+</LinearLayout>

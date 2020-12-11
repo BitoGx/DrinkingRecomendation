@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:id="@+id/menu_group1">
+        <item
+          android:id="@+id/nav_activityrecognition"
+          android:icon="@drawable/ic_running"
+          android:title="@string/menu_activity_recognition" />
+
+        <item
+          android:id="@+id/nav_dashboard"
+          android:icon="@drawable/ic_running"
+          android:title="@string/menu_dashboard" />
+        <item
+          android:id="@+id/nav_rekomendasi"
+          android:icon="@drawable/ic_water"
+          android:title="@string/menu_rekomendasi" />
+        <item
+          android:id="@+id/nav_riwayat"
+          android:icon="@drawable/ic_history"
+          android:title="@string/menu_riwayat" />
+    </group>
+
+    <group android:id="@+id/menu_group2">
+        <item
+          android:id="@+id/nav_gantipassword"
+          android:icon="@drawable/ic_password"
+          android:title="@string/menu_ganti_password" />
+        <item
+          android:id="@+id/nav_updateprofile"
+          android:icon="@drawable/ic_profile"
+          android:title="@string/menu_update_profil" />
+    </group>
+    <item
+      android:id="@+id/nav_logout"
+      android:icon="@drawable/ic_logout"
+      android:title="@string/menu_keluar" />
+</menu>

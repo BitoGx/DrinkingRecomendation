@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  android:layout_marginHorizontal="@dimen/activity_horizontal_margin"
+  android:layout_marginVertical="@dimen/activity_vertical_margin"
+  android:orientation="vertical"
+  tools:context=".RegisterActivity">
+
+    <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:orientation="vertical">
+
+      <TextView
+        android:id="@+id/tv_reg_register"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="90dp"
+        android:text="@string/register"
+        android:textSize="30sp" />
+
+      <EditText
+        android:id="@+id/et_reg_email"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:autofillHints="@string/email"
+        android:ems="10"
+        android:hint="@string/email"
+        android:inputType="textEmailAddress" />
+
+      <EditText
+        android:id="@+id/et_reg_username"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:autofillHints="@string/username"
+        android:ems="10"
+        android:hint="@string/username"
+        android:inputType="text" />
+
+      <EditText
+        android:id="@+id/et_reg_firstpassword"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:autofillHints="@string/password"
+        android:ems="10"
+        android:hint="@string/password"
+        android:inputType="textPassword" />
+
+      <EditText
+        android:id="@+id/et_reg_secondpassword"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:autofillHints="@string/password"
+        android:ems="10"
+        android:hint="@string/password"
+        android:inputType="textPassword" />
+
+      <EditText
+        android:id="@+id/et_reg_nama"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:autofillHints="@string/nama_lengkap"
+        android:ems="10"
+        android:hint="@string/nama_lengkap"
+        android:inputType="textPersonName" />
+
+      <EditText
+        android:id="@+id/et_reg_ttl"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:autofillHints="@string/tanggal_lahir"
+        android:cursorVisible="false"
+        android:ems="10"
+        android:focusable="false"
+        android:hint="@string/tanggal_lahir"
+        android:inputType="none" />
+
+      <TextView
+        android:id="@+id/tv_reg_jeniskelamin"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/jenis_kelamin"
+        android:textSize="18sp" />
+
+      <RadioGroup
+        android:id="@+id/rg_reg_jeniskelamin"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <RadioButton
+          android:id="@+id/rb_reg_pria"
+          android:layout_width="match_parent"
+          android:layout_height="match_parent"
+          android:layout_weight="1"
+          android:text="@string/pria" />
+
+        <RadioButton
+          android:id="@+id/rb_reg_wanita"
+          android:layout_width="match_parent"
+          android:layout_height="match_parent"
+          android:layout_weight="1"
+          android:text="@string/wanita" />
+      </RadioGroup>
+
+      <EditText
+        android:id="@+id/et_reg_tinggi"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:autofillHints="@string/tinggi_badan"
+        android:ems="10"
+        android:hint="@string/tinggi_badan"
+        android:inputType="number" />
+
+      <EditText
+        android:id="@+id/et_reg_berat"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:autofillHints="@string/berat_badan"
+        android:ems="10"
+        android:hint="@string/berat_badan"
+        android:inputType="number" />
+
+      <LinearLayout
+        style="?android:attr/buttonBarStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <Button
+          android:id="@+id/btn_reg_back"
+          style="?android:attr/buttonBarButtonStyle"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_marginTop="20dp"
+          android:layout_weight="1"
+          android:text="@string/back" />
+
+        <Button
+          android:id="@+id/btn_reg_register"
+          style="?android:attr/buttonBarButtonStyle"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_marginTop="20dp"
+          android:layout_weight="1"
+          android:text="@string/register" />
+      </LinearLayout>
+
+    </LinearLayout>
+</ScrollView>
