@@ -44,10 +44,18 @@ public interface APIService
   Call<UserModel.UserDataModel> postUpdatePassword(@Field("id") String id,
                                                    @Field("oldpass") String oldpass,
                                                    @Field("newpass") String newpass);
-   
+  
   @FormUrlEncoded
   @POST("API/updateProfile.php")
-  Call<UserModel.UserDataModel> postUpdateProfile(@Field("email") String email);
+  Call<UserModel.UserDataModel> postUpdateProfile(@Field("id") String id,
+                                                  @Field("email") String email,
+                                                  @Field("nama") String nama,
+                                                  @Field("ttl") String ttl,
+                                                  @Field("personalrec") String personalrec,
+                                                  @Field("tinggi") String tinggi,
+                                                  @Field("berat") String berat,
+                                                  @Field("jeniskelamin") String jeniskelamin,
+                                                  @Field("usertoken") String usertoken);
   
   @FormUrlEncoded
   @POST("API/selectUser.php")

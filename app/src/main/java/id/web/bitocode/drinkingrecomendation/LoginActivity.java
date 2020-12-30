@@ -9,7 +9,6 @@ import android.os.Bundle;
 import android.text.SpannableString;
 import android.text.TextUtils;
 import android.text.style.UnderlineSpan;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -29,7 +28,7 @@ public class LoginActivity extends AppCompatActivity
   private TextView tvlupapassword;
   private Button btnregister,btnLogin;
   private ProgressDialog progressDialog;
-  private static final String TAG = "Find Me";
+  private SessionUtil sessionUtil;
   
   @Override
   protected void onCreate(Bundle savedInstanceState)
@@ -39,7 +38,7 @@ public class LoginActivity extends AppCompatActivity
     
     inisialisasi();
     
-    if (SessionUtil.isLoggedIn(this)){
+    if (sessionUtil.isLoggedIn(this)){
       Intent intent = new Intent(this, DashboardActivity.class);
       startActivity(intent);
       finish();
@@ -92,6 +91,8 @@ public class LoginActivity extends AppCompatActivity
   
   private void inisialisasi()
   {
+    sessionUtil = new SessionUtil(this);
+    
     etusername  = findViewById(R.id.et_log_username);
     etpassword  = findViewById(R.id.et_log_password);
     
@@ -125,9 +126,8 @@ public class LoginActivity extends AppCompatActivity
           assert response.body() != null;
           if (response.body().getMessage().equalsIgnoreCase("Welcome"))
           {
-            if (SessionUtil.login(LoginActivity.this, response.body().getResults().get(0)))
+            if (sessionUtil.login(LoginActivity.this, response.body().getResults().get(0)))
             {
-              Log.i(TAG, "Nice find  me "+response.body().getMessage());
               Toast.makeText(LoginActivity.this, response.body().getMessage(), Toast.LENGTH_SHORT).show();
               Intent intent = new Intent(LoginActivity.this, DashboardActivity.class);
               startActivity(intent);
@@ -145,7 +145,6 @@ public class LoginActivity extends AppCompatActivity
       public void onFailure(@NonNull Call<UserModel.UserDataModel> call, @NonNull Throwable t)
       {
         progressDialog.dismiss();
-        Log.i(TAG, "Welp find  me "+t.getMessage());
         Toast.makeText(LoginActivity.this, t.getMessage(), Toast.LENGTH_SHORT).show();
       }
     });

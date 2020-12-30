@@ -1,91 +1,44 @@
 package id.web.bitocode.drinkingrecomendation;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Html;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import id.web.bitocode.drinkingrecomendation.adapter.SliderViewPagerAdapter;
+import id.web.bitocode.drinkingrecomendation.model.SliderModel;
 import id.web.bitocode.drinkingrecomendation.util.PrefManager;
 
 public class SliderActivity extends AppCompatActivity
 {
   private ViewPager viewPager;
+  private ViewPager.OnPageChangeListener viewPagerPageChangeListener;
   private LinearLayout dotsLayout;
-  private int[] layouts;
   private Button btnSkip, btnNext;
   private PrefManager prefManager;
+  private SliderViewPagerAdapter sliderViewPagerAdapter;
+  
   
   @Override
   protected void onCreate(Bundle savedInstanceState)
   {
     super.onCreate(savedInstanceState);
-    
-    prefManager = new PrefManager(this);
-    if(!prefManager.isFirstTimeLaunch())
-    {
-      launchHomeScreen();
-      finish();
-    }
-    
+    checkFirstTimeLaunch();
     setContentView(R.layout.activity_slider);
-  
-    viewPager  = findViewById(R.id.view_pager);
-    dotsLayout = findViewById(R.id.layoutDots);
-    btnSkip    = findViewById(R.id.btn_skip);
-    btnNext    = findViewById(R.id.btn_next);
-    
-    layouts = new int[]{
-            R.layout.welcome_slide1,
-            R.layout.welcome_slide2,
-            R.layout.welcome_slide3};
-    
-    addBottomDots(0);
-  
-    MyViewPagerAdapter myViewPagerAdapter = new MyViewPagerAdapter();
-    viewPager.setAdapter(myViewPagerAdapter);
-    viewPager.addOnPageChangeListener(viewPagerPageChangeListener);
-  
-    btnSkip.setOnClickListener(new View.OnClickListener()
-    {
-      @Override
-      public void onClick(View v)
-      {
-        launchHomeScreen();
-      }
-    });
-    
-    btnNext.setOnClickListener(new View.OnClickListener()
-    {
-      @Override
-      public void onClick(View v)
-      {
-        int current = getItem(+1);
-        if (current < layouts.length)
-        {
-          viewPager.setCurrentItem(current);
-        }
-        else
-        {
-          launchHomeScreen();
-        }
-      }
-    });
+    inisialisasi();
+    btnNextlistener();
+    btnSkiplistener();
   }
   
   private void addBottomDots(int currentPage)
   {
-    TextView[] dots = new TextView[layouts.length];
+    TextView[] dots = new TextView[SliderModel.values().length];
     
     int[] colorsActive = getResources().getIntArray(R.array.array_dot_active);
     int[] colorsInactive = getResources().getIntArray(R.array.array_dot_inactive);
@@ -104,9 +57,9 @@ public class SliderActivity extends AppCompatActivity
       dots[currentPage].setTextColor(colorsActive[currentPage]);
   }
   
-  private int getItem(int i)
+  private int getItem()
   {
-    return viewPager.getCurrentItem() + i;
+    return viewPager.getCurrentItem() + 1;
   }
   
   private void launchHomeScreen()
@@ -115,75 +68,96 @@ public class SliderActivity extends AppCompatActivity
     startActivity(new Intent(SliderActivity.this, LoginActivity.class));
     finish();
   }
-
-  ViewPager.OnPageChangeListener viewPagerPageChangeListener = new ViewPager.OnPageChangeListener()
-  {
-    
-    @Override
-    public void onPageSelected(int position)
-    {
-      addBottomDots(position);
-      
-      if (position == layouts.length - 1)
-      {
-        btnNext.setText(getString(R.string.start));
-        btnSkip.setVisibility(View.GONE);
-      }
-      else
-      {
-        btnNext.setText(getString(R.string.next));
-        btnSkip.setVisibility(View.VISIBLE);
-      }
-    }
-    
-    @Override
-    public void onPageScrolled(int arg0, float arg1, int arg2) {
-    
-    }
-    
-    @Override
-    public void onPageScrollStateChanged(int arg0) {
-    
-    }
-  };
   
-  public class MyViewPagerAdapter extends PagerAdapter
+  private void checkFirstTimeLaunch()
   {
+    prefManager = new PrefManager(this);
+    if(!prefManager.isFirstTimeLaunch())
+    {
+      launchHomeScreen();
+      finish();
+    }
+  }
   
-    public MyViewPagerAdapter()
+  private void inisialisasi()
+  {
+    viewPager  = findViewById(R.id.view_pager);
+    dotsLayout = findViewById(R.id.layoutDots);
+    btnSkip    = findViewById(R.id.btn_skip);
+    btnNext    = findViewById(R.id.btn_next);
+  
+    addBottomDots(0);
+  
+    sliderViewPagerAdapter = new SliderViewPagerAdapter(this);
+    viewPager.setAdapter(sliderViewPagerAdapter);
+    ViewPagerListener();
+    viewPager.addOnPageChangeListener(viewPagerPageChangeListener);
+  }
+  
+  private void ViewPagerListener()
+  {
+    viewPagerPageChangeListener = new ViewPager.OnPageChangeListener()
     {
-    }
-    
-    @NonNull
-    @Override
-    public Object instantiateItem(@NonNull ViewGroup container, int position)
-    {
-      LayoutInflater layoutInflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+      @Override
+      public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels)
+      {
       
-      View view = layoutInflater.inflate(layouts[position], container, false);
-      container.addView(view);
+      }
+    
+      @Override
+      public void onPageSelected(int position)
+      {
+        addBottomDots(position);
       
-      return view;
-    }
+        if (position == SliderModel.values().length - 1)
+        {
+          btnNext.setText(getString(R.string.start));
+          btnSkip.setVisibility(View.GONE);
+        }
+        else
+        {
+          btnNext.setText(getString(R.string.next));
+          btnSkip.setVisibility(View.VISIBLE);
+        }
+      }
     
-    @Override
-    public int getCount()
+      @Override
+      public void onPageScrollStateChanged(int state)
+      {
+      
+      }
+    };
+  }
+  
+  private void btnNextlistener()
+  {
+    btnNext.setOnClickListener(new View.OnClickListener()
     {
-      return layouts.length;
-    }
-    
-    @Override
-    public boolean isViewFromObject(@NonNull View view, @NonNull Object obj)
+      @Override
+      public void onClick(View v)
+      {
+        int current = getItem();
+        if (current < SliderModel.values().length)
+        {
+          viewPager.setCurrentItem(current);
+        }
+        else
+        {
+          launchHomeScreen();
+        }
+      }
+    });
+  }
+  
+  private void btnSkiplistener()
+  {
+    btnSkip.setOnClickListener(new View.OnClickListener()
     {
-      return view == obj;
-    }
-    
-    
-    @Override
-    public void destroyItem(ViewGroup container, int position, @NonNull Object object)
-    {
-      View view = (View) object;
-      container.removeView(view);
-    }
+      @Override
+      public void onClick(View v)
+      {
+        launchHomeScreen();
+      }
+    });
   }
 }

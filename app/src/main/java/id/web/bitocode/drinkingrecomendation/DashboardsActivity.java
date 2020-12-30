@@ -32,8 +32,8 @@ public class DashboardsActivity extends AppCompatActivity implements NavigationV
 {
   private DrawerLayout drawer;
   private ProgressDialog progressDialog;
-  private static final String TAG = "Find Me";
   
+  private SessionUtil sessionUtil;
   
   @Override
   protected void onCreate(Bundle savedInstanceState)
@@ -61,6 +61,8 @@ public class DashboardsActivity extends AppCompatActivity implements NavigationV
       navigationView.setCheckedItem(R.id.nav_dashboard);
     }
   
+    sessionUtil = new SessionUtil(this);
+    
     progressDialog = ProgressDialog.show(DashboardsActivity.this, "", "Load Data.....", true, false);
     loadUserData();
   }
@@ -97,35 +99,15 @@ public class DashboardsActivity extends AppCompatActivity implements NavigationV
   
     if(id == R.id.nav_logout)
     {
-      SessionUtil.logout(DashboardsActivity.this);
+      sessionUtil.logout(DashboardsActivity.this);
       Intent intent = new Intent(this, LoginActivity.class);
       startActivity(intent);
+      finish();
     }
     return true;
   }
   
   private void loadUserData()
   {
-    Call<SelectUserModel> call = APIService.Factory.create().postSelectUser(Objects.requireNonNull(SessionUtil.getLoggedUser(DashboardsActivity.this)).getUserid());
-    call.enqueue(new Callback<SelectUserModel>()
-    {
-      @Override
-      public void onResponse(@NonNull Call<SelectUserModel> call, @NonNull Response<SelectUserModel> response)
-      {
-        progressDialog.dismiss();
-        TextView tvopen = findViewById(R.id.tv_dash_opening);
-        assert response.body() != null;
-        String msg = response.body().getNama();
-        Log.i(TAG, "Nuce find  me "+msg);
-        tvopen.setText(response.body().getNama());
-      }
-  
-      @Override
-      public void onFailure(@NonNull Call<SelectUserModel> call, @NonNull Throwable t)
-      {
-        progressDialog.dismiss();
-        Toast.makeText(DashboardsActivity.this, t.getMessage(), Toast.LENGTH_SHORT).show();
-      }
-    });
   }
 }

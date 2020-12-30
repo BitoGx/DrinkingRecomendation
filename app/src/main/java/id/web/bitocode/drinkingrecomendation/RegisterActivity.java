@@ -53,46 +53,24 @@ public class RegisterActivity extends AppCompatActivity
     btnBackListener();
   }
   
-  private void btnRegisterListener()
+  private void inisialisasi()
   {
-    btnregister.setOnClickListener(new View.OnClickListener()
-    {
-      @Override
-      public void onClick(View v)
-      {
-        if(validateData())
-        {
-          Toast.makeText(RegisterActivity.this, "Maaf semua field wajib diisi",Toast.LENGTH_SHORT).show();
-        }
-        else
-        {
-          if(!validatePassword())
-          {
-            Toast.makeText(RegisterActivity.this, "Maaf password pertama dan kedua tidak sama",Toast.LENGTH_SHORT).show();
-            etfirstpass.requestFocus();
-          }
-          else
-          {
-            progressDialog = ProgressDialog.show(RegisterActivity.this, "", "Menyimpan.....", true, false);
-            saveUserData();
-          }
-        }
-      }
-    });
-  }
-  
-  private void btnBackListener()
-  {
-    btnback.setOnClickListener(new View.OnClickListener()
-    {
-      @Override
-      public void onClick(View v)
-      {
-        Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
-        startActivity(intent);
-        finish();
-      }
-    });
+    selectedCalendar = Calendar.getInstance();
+    thisCalendar     = Calendar.getInstance();
+    
+    etemail      = findViewById(R.id.et_reg_email);
+    etusername   = findViewById(R.id.et_reg_username);
+    etfirstpass  = findViewById(R.id.et_reg_firstpassword);
+    etsecondpass = findViewById(R.id.et_reg_secondpassword);
+    etnama       = findViewById(R.id.et_reg_nama);
+    etttl        = findViewById(R.id.et_reg_ttl);
+    ettinggi     = findViewById(R.id.et_reg_tinggi);
+    etberat      = findViewById(R.id.et_reg_berat);
+    
+    rgjeniskelamin = findViewById(R.id.rg_reg_jeniskelamin);
+    
+    btnback = findViewById(R.id.btn_reg_back);
+    btnregister = findViewById(R.id.btn_reg_register);
   }
   
   private void editCalendar()
@@ -119,10 +97,10 @@ public class RegisterActivity extends AppCompatActivity
       {
         String myFormat = "yyyy-MM-dd";
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(myFormat, Locale.US);
-        Date thisdate = thisCalendar.getTime();
+        Date now = thisCalendar.getTime();
         Date selecteddate = selectedCalendar.getTime();
       
-        if(selecteddate.compareTo(thisdate) >= 0)
+        if(selecteddate.compareTo(now) >= 0)
         {
           etttl.setText(getResources().getString(R.string.validasi_tanggal));
           btnregister.setClickable(false);
@@ -146,23 +124,32 @@ public class RegisterActivity extends AppCompatActivity
     };
   }
   
-  private void inisialisasi()
+  private void btnRegisterListener()
   {
-    selectedCalendar = Calendar.getInstance();
-    thisCalendar     = Calendar.getInstance();
-    
-    etemail        = findViewById(R.id.et_reg_email);
-    etusername     = findViewById(R.id.et_reg_username);
-    etfirstpass    = findViewById(R.id.et_reg_firstpassword);
-    etsecondpass   = findViewById(R.id.et_reg_secondpassword);
-    etnama         = findViewById(R.id.et_reg_nama);
-    etttl          = findViewById(R.id.et_reg_ttl);
-    ettinggi       = findViewById(R.id.et_reg_tinggi);
-    etberat        = findViewById(R.id.et_reg_berat);
-    rgjeniskelamin = findViewById(R.id.rg_reg_jeniskelamin);
-  
-    btnback = findViewById(R.id.btn_reg_back);
-    btnregister = findViewById(R.id.btn_reg_register);
+    btnregister.setOnClickListener(new View.OnClickListener()
+    {
+      @Override
+      public void onClick(View v)
+      {
+        if(validateData())
+        {
+          Toast.makeText(RegisterActivity.this, "Maaf semua field wajib diisi",Toast.LENGTH_SHORT).show();
+        }
+        else
+        {
+          if(!validatePassword())
+          {
+            Toast.makeText(RegisterActivity.this, "Maaf password pertama dan kedua tidak sama",Toast.LENGTH_SHORT).show();
+            etfirstpass.requestFocus();
+          }
+          else
+          {
+            progressDialog = ProgressDialog.show(RegisterActivity.this, "", "Menyimpan.....", true, false);
+            saveUserData();
+          }
+        }
+      }
+    });
   }
   
   private boolean validateData()
@@ -234,6 +221,20 @@ public class RegisterActivity extends AppCompatActivity
         progressDialog.dismiss();
         Log.i(TAG, "Welp find  me "+t.getMessage());
         Toast.makeText(RegisterActivity.this, t.getMessage(), Toast.LENGTH_SHORT).show();
+      }
+    });
+  }
+  
+  private void btnBackListener()
+  {
+    btnback.setOnClickListener(new View.OnClickListener()
+    {
+      @Override
+      public void onClick(View v)
+      {
+        Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
+        startActivity(intent);
+        finish();
       }
     });
   }

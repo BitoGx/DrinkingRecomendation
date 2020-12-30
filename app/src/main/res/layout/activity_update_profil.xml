@@ -38,6 +38,34 @@
     android:hint="@string/tanggal_lahir"
     android:inputType="none" />
 
+  <TextView
+    android:id="@+id/tv_upprofile_jeniskelamin"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:text="@string/jenis_kelamin"
+    android:textSize="18sp" />
+
+  <RadioGroup
+    android:id="@+id/rg_upprofile_jeniskelamin"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal">
+
+    <RadioButton
+      android:id="@+id/rb_upprofile_pria"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:layout_weight="1"
+      android:text="@string/pria" />
+
+    <RadioButton
+      android:id="@+id/rb_upprofile_wanita"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:layout_weight="1"
+      android:text="@string/wanita" />
+  </RadioGroup>
+
   <EditText
     android:id="@+id/et_upprofile_rekomendasipersonal"
     android:layout_width="match_parent"

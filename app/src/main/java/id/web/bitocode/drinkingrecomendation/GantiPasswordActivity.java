@@ -8,7 +8,6 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -26,7 +25,7 @@ public class GantiPasswordActivity extends AppCompatActivity
   private EditText etoldpass,etnewfirstpass,etnewsecondpass;
   private Button btnupdate;
   private ProgressDialog progressDialog;
-  private static final String TAG = "Find Me";
+  private SessionUtil sessionUtil;
   
   @Override
   protected void onCreate(Bundle savedInstanceState)
@@ -36,6 +35,7 @@ public class GantiPasswordActivity extends AppCompatActivity
   
     setUpActionBar();
     inisialisasi();
+    
     btnUpdateListener();
   }
   
@@ -49,6 +49,8 @@ public class GantiPasswordActivity extends AppCompatActivity
   
   private void inisialisasi()
   {
+    sessionUtil = new SessionUtil(this);
+    
     etoldpass       = findViewById(R.id.et_gantipass_oldpass);
     etnewfirstpass  = findViewById(R.id.et_gantipass_firstnewpass);
     etnewsecondpass = findViewById(R.id.et_gantipass_secondnewpass);
@@ -99,7 +101,7 @@ public class GantiPasswordActivity extends AppCompatActivity
   
   private void updatePassword()
   {
-    String id      = SessionUtil.getLoggedUser(GantiPasswordActivity.this).getUserid();
+    String id      = sessionUtil.getLoggedUser(GantiPasswordActivity.this).getUserid();
     String oldpass = etoldpass.getText().toString();
     String newpass = etnewfirstpass.getText().toString();
   
@@ -116,7 +118,6 @@ public class GantiPasswordActivity extends AppCompatActivity
           assert response.body() != null;
           if (response.body().getMessage().equalsIgnoreCase("Berhasil"))
           {
-            Log.i(TAG, "Nice find  me "+response.body().getMessage());
             Toast.makeText(GantiPasswordActivity.this, "Password berhasil diganti", Toast.LENGTH_SHORT).show();
             Intent intent = new Intent(GantiPasswordActivity.this, DashboardActivity.class);
             startActivity(intent);

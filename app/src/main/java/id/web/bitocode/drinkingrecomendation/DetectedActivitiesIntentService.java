@@ -16,19 +16,22 @@ public class DetectedActivitiesIntentService  extends IntentService {
   
   protected static final String TAG = DetectedActivitiesIntentService.class.getSimpleName();
   
-  public DetectedActivitiesIntentService() {
+  public DetectedActivitiesIntentService()
+  {
     // Use the TAG to name the worker thread.
     super(TAG);
   }
   
   @Override
-  public void onCreate() {
+  public void onCreate()
+  {
     super.onCreate();
   }
   
   @SuppressWarnings("unchecked")
   @Override
-  protected void onHandleIntent(Intent intent) {
+  protected void onHandleIntent(Intent intent)
+  {
     ActivityRecognitionResult result = ActivityRecognitionResult.extractResult(intent);
     
     // Get the list of the probable activities associated with the current state of the

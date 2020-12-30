@@ -1,5 +1,7 @@
 package id.web.bitocode.drinkingrecomendation.model;
 
+import java.util.List;
+
 public class SelectUserModel extends MessageModel
 {
   private String userid;
@@ -23,7 +25,6 @@ public class SelectUserModel extends MessageModel
   {
     this.userid = userid;
   }
-  
   
   public String getEmail()
   {
@@ -124,4 +125,5 @@ public class SelectUserModel extends MessageModel
   {
     this.usertoken = usertoken;
   }
+  
 }

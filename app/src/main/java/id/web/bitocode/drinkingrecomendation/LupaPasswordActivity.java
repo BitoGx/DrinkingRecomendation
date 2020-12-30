@@ -7,7 +7,6 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -25,7 +24,6 @@ public class LupaPasswordActivity extends AppCompatActivity
   private EditText etidentifier;
   private Button btnback,btnconfirm;
   private ProgressDialog progressDialog;
-  private static final String TAG = "Find Me";
   
   @Override
   protected void onCreate(Bundle savedInstanceState)
@@ -94,7 +92,6 @@ public class LupaPasswordActivity extends AppCompatActivity
           assert response.body() != null;
           if (response.body().getMessage().equalsIgnoreCase("Sended"))
           {
-            Log.i(TAG, "Nice find  me "+response.body().getMessage());
             Toast.makeText(LupaPasswordActivity.this, "Silahkan cek email anda", Toast.LENGTH_SHORT).show();
             Intent intent = new Intent(LupaPasswordActivity.this, LoginActivity.class);
             startActivity(intent);
@@ -111,7 +108,6 @@ public class LupaPasswordActivity extends AppCompatActivity
       public void onFailure(@NonNull Call<UserModel.UserDataModel> call, @NonNull Throwable t)
       {
         progressDialog.dismiss();
-        Log.i(TAG, "Welp find  me "+t.getMessage());
         Toast.makeText(LupaPasswordActivity.this, t.getMessage(), Toast.LENGTH_SHORT).show();
       }
     });

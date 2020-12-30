@@ -18,8 +18,6 @@ import android.widget.Toast;
 
 import com.google.android.material.navigation.NavigationView;
 
-import java.util.Objects;
-
 import id.web.bitocode.drinkingrecomendation.model.SelectUserModel;
 import id.web.bitocode.drinkingrecomendation.network.APIService;
 import id.web.bitocode.drinkingrecomendation.util.SessionUtil;
@@ -34,6 +32,8 @@ public class DashboardActivity extends AppCompatActivity implements NavigationVi
   private static final String TAG = "Find Me";
   private NavigationView navigationView;
   private Toolbar toolbar;
+  
+  private SessionUtil sessionUtil;
   
   @Override
   protected void onCreate(Bundle savedInstanceState)
@@ -56,6 +56,8 @@ public class DashboardActivity extends AppCompatActivity implements NavigationVi
   
     progressDialog = ProgressDialog.show(DashboardActivity.this, "", "Load Data.....", true, false);
     loadUserData();
+    
+    
   }
   
   @Override
@@ -72,6 +74,8 @@ public class DashboardActivity extends AppCompatActivity implements NavigationVi
   
   private void inisialisasi()
   {
+    sessionUtil = new SessionUtil(this);
+    
     drawer = findViewById(R.id.drawer_dashboard_layout);
     navigationView = findViewById(R.id.nav_dashboard_view);
     toolbar = findViewById(R.id.toolbar);
@@ -94,6 +98,12 @@ public class DashboardActivity extends AppCompatActivity implements NavigationVi
       startActivity(intent);
     }
   
+    if(id == R.id.nav_rekomendasi)
+    {
+      Intent intent = new Intent(this, MapsActivity.class);
+      startActivity(intent);
+    }
+  
     if(id == R.id.nav_updateprofile)
     {
       Intent intent = new Intent(this, UpdateProfilActivity.class);
@@ -108,16 +118,17 @@ public class DashboardActivity extends AppCompatActivity implements NavigationVi
   
     if(id == R.id.nav_logout)
     {
-      SessionUtil.logout(DashboardActivity.this);
+      sessionUtil.logout(DashboardActivity.this);
       Intent intent = new Intent(this, LoginActivity.class);
       startActivity(intent);
+      finish();
     }
     return true;
   }
   
   private void loadUserData()
   {
-    String id = SessionUtil.getLoggedUser(DashboardActivity.this).getUserid();
+    String id = sessionUtil.getLoggedUser(DashboardActivity.this).getUserid();
     
     Call<SelectUserModel> call = APIService.Factory.create().postSelectUser(id);
     call.enqueue(new Callback<SelectUserModel>()

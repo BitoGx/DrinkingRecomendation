@@ -1,34 +1,22 @@
 package id.web.bitocode.drinkingrecomendation;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 
-import androidx.appcompat.widget.Toolbar;
-import androidx.core.view.GravityCompat;
-import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.android.gms.location.DetectedActivity;
-import com.google.android.material.navigation.NavigationView;
-
-import java.util.Objects;
-
 import id.web.bitocode.drinkingrecomendation.config.Constants;
-import id.web.bitocode.drinkingrecomendation.util.SessionUtil;
 
 public class ActivityRecognitionActivity extends AppCompatActivity
 {

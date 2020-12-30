@@ -10,12 +10,21 @@ import id.web.bitocode.drinkingrecomendation.model.UserModel;
 
 public class SessionUtil
 {
-  public static boolean login(Context context, UserModel userModel)
+  SharedPreferences pref;
+  SharedPreferences.Editor editor;
+  Context _context;
+  
+  public SessionUtil(Context context)
   {
-    SharedPreferences sharedPreferences = context.getSharedPreferences(
+    this._context = context;
+  }
+  
+  public boolean login(Context context, UserModel userModel)
+  {
+    pref = context.getSharedPreferences(
             Constants.KEY_USER_SESSION, Context.MODE_PRIVATE);
     
-    SharedPreferences.Editor editor = sharedPreferences.edit();
+    editor = pref.edit();
     
     String userJson = new Gson().toJson(userModel);
     editor.putString(Constants.USER_SESSION, userJson);
@@ -23,19 +32,20 @@ public class SessionUtil
     return true;
   }
   
-  public static boolean isLoggedIn(Context context)
+  public boolean isLoggedIn(Context context)
   {
-    SharedPreferences sharedPreferences = context.getSharedPreferences(
+    pref = context.getSharedPreferences(
             Constants.KEY_USER_SESSION, Context.MODE_PRIVATE);
     
-    String userJson = sharedPreferences.getString(Constants.USER_SESSION, null);
+    String userJson = pref.getString(Constants.USER_SESSION, null);
     return userJson != null;
   }
   
-  public static UserModel getLoggedUser(Context context) {
-    SharedPreferences sharedPreferences = context.getSharedPreferences(
-            Constants.KEY_USER_SESSION, Context.MODE_PRIVATE);
-    String userJson = sharedPreferences.getString(Constants.USER_SESSION, null);
+  public UserModel getLoggedUser(Context context)
+  {
+    pref = context.getSharedPreferences(
+           Constants.KEY_USER_SESSION, Context.MODE_PRIVATE);
+    String userJson = pref.getString(Constants.USER_SESSION, null);
     if (userJson != null)
     {
       return new Gson().fromJson(userJson, UserModel.class);
@@ -44,10 +54,11 @@ public class SessionUtil
       return null;
   }
   
-  public static void logout(Context context) {
-    SharedPreferences sharedPreferences = context.getSharedPreferences(
+  public void logout(Context context)
+  {
+    pref = context.getSharedPreferences(
             Constants.KEY_USER_SESSION, Context.MODE_PRIVATE);
-    SharedPreferences.Editor editor = sharedPreferences.edit();
+    editor = pref.edit();
     editor.clear();
     editor.apply();
   

@@ -19,7 +19,6 @@ import id.web.bitocode.drinkingrecomendation.config.Constants;
 public class BackgroundDetectedActivitiesService extends Service {
   private static final String TAG = BackgroundDetectedActivitiesService.class.getSimpleName();
   
-  private Intent mIntentService;
   private PendingIntent mPendingIntent;
   private ActivityRecognitionClient mActivityRecognitionClient;
   
@@ -39,7 +38,7 @@ public class BackgroundDetectedActivitiesService extends Service {
   public void onCreate() {
     super.onCreate();
     mActivityRecognitionClient = new ActivityRecognitionClient(this);
-    mIntentService = new Intent(this, DetectedActivitiesIntentService.class);
+    Intent mIntentService = new Intent(this, DetectedActivitiesIntentService.class);
     mPendingIntent = PendingIntent.getService(this, 1, mIntentService, PendingIntent.FLAG_UPDATE_CURRENT);
     requestActivityUpdatesButtonHandler();
   }
