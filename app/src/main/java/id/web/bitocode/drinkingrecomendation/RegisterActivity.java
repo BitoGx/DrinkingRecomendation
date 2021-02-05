@@ -5,10 +5,10 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -39,7 +39,6 @@ public class RegisterActivity extends AppCompatActivity
   private RadioButton rbjeniskelamin;
   private Button btnregister,btnback;
   private ProgressDialog progressDialog;
-  private static final String TAG = "Find Me";
   
   @Override
   protected void onCreate(Bundle savedInstanceState)
@@ -48,9 +47,9 @@ public class RegisterActivity extends AppCompatActivity
     setContentView(R.layout.activity_register);
   
     inisialisasi();
-    editCalendar();
-    btnRegisterListener();
-    btnBackListener();
+    editCalendar(this);
+    btnRegisterListener(this);
+    btnBackListener(this);
   }
   
   private void inisialisasi()
@@ -69,18 +68,18 @@ public class RegisterActivity extends AppCompatActivity
     
     rgjeniskelamin = findViewById(R.id.rg_reg_jeniskelamin);
     
-    btnback = findViewById(R.id.btn_reg_back);
+    btnback     = findViewById(R.id.btn_reg_back);
     btnregister = findViewById(R.id.btn_reg_register);
   }
   
-  private void editCalendar()
+  private void editCalendar(final Context context)
   {
     etttl.setOnClickListener(new View.OnClickListener()
     {
       @Override
       public void onClick(View v)
       {
-        new DatePickerDialog(RegisterActivity.this, onDateSetListener,
+        new DatePickerDialog(context, onDateSetListener,
                 selectedCalendar.get(Calendar.YEAR),
                 selectedCalendar.get(Calendar.MONTH),
                 selectedCalendar.get(Calendar.DAY_OF_MONTH)).show();
@@ -124,34 +123,6 @@ public class RegisterActivity extends AppCompatActivity
     };
   }
   
-  private void btnRegisterListener()
-  {
-    btnregister.setOnClickListener(new View.OnClickListener()
-    {
-      @Override
-      public void onClick(View v)
-      {
-        if(validateData())
-        {
-          Toast.makeText(RegisterActivity.this, "Maaf semua field wajib diisi",Toast.LENGTH_SHORT).show();
-        }
-        else
-        {
-          if(!validatePassword())
-          {
-            Toast.makeText(RegisterActivity.this, "Maaf password pertama dan kedua tidak sama",Toast.LENGTH_SHORT).show();
-            etfirstpass.requestFocus();
-          }
-          else
-          {
-            progressDialog = ProgressDialog.show(RegisterActivity.this, "", "Menyimpan.....", true, false);
-            saveUserData();
-          }
-        }
-      }
-    });
-  }
-  
   private boolean validateData()
   {
     int selectedradiobutton = rgjeniskelamin.getCheckedRadioButtonId();
@@ -168,12 +139,40 @@ public class RegisterActivity extends AppCompatActivity
             || TextUtils.isEmpty(rbjeniskelamin.getText().toString());
   }
   
+  private void btnRegisterListener(final Context context)
+  {
+    btnregister.setOnClickListener(new View.OnClickListener()
+    {
+      @Override
+      public void onClick(View v)
+      {
+        if(validateData())
+        {
+          Toast.makeText(context, "Maaf semua field wajib diisi",Toast.LENGTH_SHORT).show();
+        }
+        else
+        {
+          if(!validatePassword())
+          {
+            Toast.makeText(context, "Maaf password pertama dan kedua tidak sama",Toast.LENGTH_SHORT).show();
+            etfirstpass.requestFocus();
+          }
+          else
+          {
+            progressDialog = ProgressDialog.show(context, "", "Menyimpan.....", true, false);
+            saveUserData(context);
+          }
+        }
+      }
+    });
+  }
+  
   private boolean validatePassword()
   {
     return etfirstpass.getText().toString().equals(etsecondpass.getText().toString());
   }
   
-  private void saveUserData()
+  private void saveUserData(final Context context)
   {
     String email        = etemail.getText().toString();
     String username     = etusername.getText().toString();
@@ -203,15 +202,23 @@ public class RegisterActivity extends AppCompatActivity
       public void onResponse(@NonNull Call<MessageModel> call, @NonNull Response<MessageModel> response)
       {
         progressDialog.dismiss();
-        assert response.body() != null;
-        Toast.makeText(RegisterActivity.this, response.body().getMessage(), Toast.LENGTH_SHORT).show();
-        String msg = response.body().getMessage();
-        Log.i(TAG, "Nuce find  me "+msg);
-        if(msg.equals("Cek Email Anda"))
+        if (response.isSuccessful())
         {
-          Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
-          startActivity(intent);
-          finish();
+          if (response.body() != null)
+          {
+            Toast.makeText(context, response.body().getMessage(), Toast.LENGTH_SHORT).show();
+            String msg = response.body().getMessage();
+            if(msg.equals("Cek Email Anda"))
+            {
+              Intent intent = new Intent(context, LoginActivity.class);
+              startActivity(intent);
+              finish();
+            }
+          }
+          else
+          {
+            Toast.makeText(context, "Maaf server memberikan response yang salah", Toast.LENGTH_SHORT).show();
+          }
         }
       }
   
@@ -219,20 +226,19 @@ public class RegisterActivity extends AppCompatActivity
       public void onFailure(@NonNull Call<MessageModel> call, @NonNull Throwable t)
       {
         progressDialog.dismiss();
-        Log.i(TAG, "Welp find  me "+t.getMessage());
-        Toast.makeText(RegisterActivity.this, t.getMessage(), Toast.LENGTH_SHORT).show();
+        Toast.makeText(context, t.getMessage(), Toast.LENGTH_SHORT).show();
       }
     });
   }
   
-  private void btnBackListener()
+  private void btnBackListener(final Context context)
   {
     btnback.setOnClickListener(new View.OnClickListener()
     {
       @Override
       public void onClick(View v)
       {
-        Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
+        Intent intent = new Intent(context, LoginActivity.class);
         startActivity(intent);
         finish();
       }

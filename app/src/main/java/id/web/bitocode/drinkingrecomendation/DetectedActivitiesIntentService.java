@@ -33,10 +33,6 @@ public class DetectedActivitiesIntentService  extends IntentService {
   protected void onHandleIntent(Intent intent)
   {
     ActivityRecognitionResult result = ActivityRecognitionResult.extractResult(intent);
-    
-    // Get the list of the probable activities associated with the current state of the
-    // device. Each activity is associated with a confidence level, which is an int between
-    // 0 and 100.
     ArrayList<DetectedActivity> detectedActivities = (ArrayList) result.getProbableActivities();
     
     for (DetectedActivity activity : detectedActivities) {

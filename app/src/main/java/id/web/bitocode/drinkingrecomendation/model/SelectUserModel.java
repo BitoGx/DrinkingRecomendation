@@ -1,20 +1,34 @@
 package id.web.bitocode.drinkingrecomendation.model;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.util.List;
 
 public class SelectUserModel extends MessageModel
 {
+  @SerializedName("userid")
   private String userid;
+  @SerializedName("nama")
   private String nama;
+  @SerializedName("username")
   private String username;
+  @SerializedName("email")
   private String email;
+  @SerializedName("jeniskelamin")
   private String jeniskelamin;
+  @SerializedName("tanggallahir")
   private String tanggallahir;
+  @SerializedName("tinggibadan")
   private Integer tinggibadan;
+  @SerializedName("beratbadan")
   private Integer beratbadan;
+  @SerializedName("rekomendasipersonal")
   private Integer rekomendasipersonal;
+  @SerializedName("password")
   private String password;
+  @SerializedName("usertoken")
   private String usertoken;
+  
   
   public String getUserid()
   {

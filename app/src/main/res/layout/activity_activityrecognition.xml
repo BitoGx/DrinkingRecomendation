@@ -40,25 +40,14 @@
         android:textAllCaps="true"
         android:textSize="14dp" />
 
-      <LinearLayout
+      <Button
+        android:id="@+id/btn_start_tracking"
+        android:layout_marginStart="@dimen/activity_horizontal_margin"
+        android:layout_marginEnd="@dimen/activity_horizontal_margin"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="horizontal">
+        android:layout_height="wrap_content"
+        android:text="@string/start_tracking" />
 
-        <Button
-          android:id="@+id/btn_start_tracking"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:layout_weight="1"
-          android:text="Start Tracking" />
-
-        <Button
-          android:id="@+id/btn_stop_tracking"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:layout_weight="1"
-          android:text="Stop Tracking" />
-      </LinearLayout>
     </LinearLayout>
 
   <com.google.android.material.navigation.NavigationView

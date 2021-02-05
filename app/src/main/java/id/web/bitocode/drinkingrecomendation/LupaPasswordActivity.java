@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -32,34 +33,8 @@ public class LupaPasswordActivity extends AppCompatActivity
     setContentView(R.layout.activity_lupa_password);
     
     inisialisasi();
-    
-    btnconfirm.setOnClickListener(new View.OnClickListener()
-    {
-      @Override
-      public void onClick(View v)
-      {
-        if(!validateData())
-        {
-          progressDialog = ProgressDialog.show(LupaPasswordActivity.this, "", "Checking", true, false);
-          sendEmail();
-        }
-        else
-        {
-          Toast.makeText(LupaPasswordActivity.this, "Maaf silahkan masukkan username atau email",Toast.LENGTH_SHORT).show();
-        }
-      }
-    });
-    
-    btnback.setOnClickListener(new View.OnClickListener()
-    {
-      @Override
-      public void onClick(View v)
-      {
-        Intent intent = new Intent(LupaPasswordActivity.this, LoginActivity.class);
-        startActivity(intent);
-        finish();
-      }
-    });
+    btnBackListener(this);
+    btnConfirmListener(this);
   }
   
   private void inisialisasi()
@@ -75,10 +50,30 @@ public class LupaPasswordActivity extends AppCompatActivity
     return TextUtils.isEmpty(etidentifier.getText().toString());
   }
   
-  private void sendEmail()
+  private void btnConfirmListener(final Context context)
+  {
+    btnconfirm.setOnClickListener(new View.OnClickListener()
+    {
+      @Override
+      public void onClick(View v)
+      {
+        if(!validateData())
+        {
+          progressDialog = ProgressDialog.show(context, "", "Checking", true, false);
+          sendEmail(context);
+        }
+        else
+        {
+          Toast.makeText(context, "Maaf silahkan masukkan username atau email",Toast.LENGTH_SHORT).show();
+        }
+      }
+    });
+  }
+  
+  private void sendEmail(final Context context)
   {
     String identifier = etidentifier.getText().toString();
-  
+    
     Call<UserModel.UserDataModel> call = APIService.Factory.create().postLupaPassword(identifier);
     
     call.enqueue(new Callback<UserModel.UserDataModel>()
@@ -89,28 +84,47 @@ public class LupaPasswordActivity extends AppCompatActivity
         progressDialog.dismiss();
         if (response.isSuccessful())
         {
-          assert response.body() != null;
-          if (response.body().getMessage().equalsIgnoreCase("Sended"))
+          if (response.body() != null)
           {
-            Toast.makeText(LupaPasswordActivity.this, "Silahkan cek email anda", Toast.LENGTH_SHORT).show();
-            Intent intent = new Intent(LupaPasswordActivity.this, LoginActivity.class);
-            startActivity(intent);
-            finish();
+            if(response.body().getMessage().equalsIgnoreCase("Sended"))
+            {
+              Toast.makeText(context, "Silahkan cek email anda", Toast.LENGTH_SHORT).show();
+              Intent intent = new Intent(context, LoginActivity.class);
+              startActivity(intent);
+              finish();
+            }
+            else
+            {
+              Toast.makeText(context, response.body().getMessage(), Toast.LENGTH_SHORT).show();
+            }
           }
           else
           {
-            Toast.makeText(LupaPasswordActivity.this, response.body().getMessage(), Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, "Maaf server memberikan response yang salah", Toast.LENGTH_SHORT).show();
           }
         }
       }
-  
+      
       @Override
       public void onFailure(@NonNull Call<UserModel.UserDataModel> call, @NonNull Throwable t)
       {
         progressDialog.dismiss();
-        Toast.makeText(LupaPasswordActivity.this, t.getMessage(), Toast.LENGTH_SHORT).show();
+        Toast.makeText(context, t.getMessage(), Toast.LENGTH_SHORT).show();
       }
     });
-    
+  }
+  
+  private void btnBackListener(final Context context)
+  {
+    btnback.setOnClickListener(new View.OnClickListener()
+    {
+      @Override
+      public void onClick(View v)
+      {
+        Intent intent = new Intent(context, LoginActivity.class);
+        startActivity(intent);
+        finish();
+      }
+    });
   }
 }

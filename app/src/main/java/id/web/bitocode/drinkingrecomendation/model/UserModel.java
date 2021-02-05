@@ -1,19 +1,32 @@
 package id.web.bitocode.drinkingrecomendation.model;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.util.List;
 
 public class UserModel
 {
+  @SerializedName("userid")
   private String userid;
+  @SerializedName("nama")
   private String nama;
+  @SerializedName("username")
   private String username;
+  @SerializedName("email")
   private String email;
+  @SerializedName("jeniskelamin")
   private String jeniskelamin;
+  @SerializedName("tanggallahir")
   private String tanggallahir;
+  @SerializedName("tinggibadan")
   private Integer tinggibadan;
+  @SerializedName("beratbadan")
   private Integer beratbadan;
+  @SerializedName("rekomendasipersonal")
   private Integer rekomendasipersonal;
+  @SerializedName("password")
   private String password;
+  @SerializedName("usertoken")
   private String usertoken;
   
   public String getUsername()
@@ -136,15 +149,18 @@ public class UserModel
     this.usertoken = usertoken;
   }
   
-  public class UserDataModel extends MessageModel
+  public static class UserDataModel extends MessageModel
   {
+    @SerializedName("results")
     private List<UserModel> results;
     
-    public List<UserModel> getResults() {
+    public List<UserModel> getResults()
+    {
       return results;
     }
     
-    public void setResults(List<UserModel> results) {
+    public void setResults(List<UserModel> results)
+    {
       this.results = results;
     }
   }

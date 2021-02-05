@@ -3,6 +3,7 @@ package id.web.bitocode.drinkingrecomendation;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager.widget.ViewPager;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Html;
@@ -29,11 +30,29 @@ public class SliderActivity extends AppCompatActivity
   protected void onCreate(Bundle savedInstanceState)
   {
     super.onCreate(savedInstanceState);
-    checkFirstTimeLaunch();
     setContentView(R.layout.activity_slider);
+    
+    checkFirstTimeLaunch();
+    
     inisialisasi();
-    btnNextlistener();
-    btnSkiplistener();
+    btnNextlistener(this);
+    btnSkiplistener(this);
+  }
+  
+  private void launchLoginActivity(Context context)
+  {
+    prefManager.setFirstTimeLaunch(false);
+    startActivity(new Intent(context, LoginActivity.class));
+    finish();
+  }
+  
+  private void checkFirstTimeLaunch()
+  {
+    prefManager = new PrefManager(this);
+    if(!prefManager.isFirstTimeLaunch())
+    {
+      launchLoginActivity(this);
+    }
   }
   
   private void addBottomDots(int currentPage)
@@ -44,6 +63,7 @@ public class SliderActivity extends AppCompatActivity
     int[] colorsInactive = getResources().getIntArray(R.array.array_dot_inactive);
     
     dotsLayout.removeAllViews();
+    
     for (int i = 0; i < dots.length; i++)
     {
       dots[i] = new TextView(this);
@@ -60,23 +80,6 @@ public class SliderActivity extends AppCompatActivity
   private int getItem()
   {
     return viewPager.getCurrentItem() + 1;
-  }
-  
-  private void launchHomeScreen()
-  {
-    prefManager.setFirstTimeLaunch(false);
-    startActivity(new Intent(SliderActivity.this, LoginActivity.class));
-    finish();
-  }
-  
-  private void checkFirstTimeLaunch()
-  {
-    prefManager = new PrefManager(this);
-    if(!prefManager.isFirstTimeLaunch())
-    {
-      launchHomeScreen();
-      finish();
-    }
   }
   
   private void inisialisasi()
@@ -129,7 +132,7 @@ public class SliderActivity extends AppCompatActivity
     };
   }
   
-  private void btnNextlistener()
+  private void btnNextlistener(final Context context)
   {
     btnNext.setOnClickListener(new View.OnClickListener()
     {
@@ -143,20 +146,20 @@ public class SliderActivity extends AppCompatActivity
         }
         else
         {
-          launchHomeScreen();
+          launchLoginActivity(context);
         }
       }
     });
   }
   
-  private void btnSkiplistener()
+  private void btnSkiplistener(final Context context)
   {
     btnSkip.setOnClickListener(new View.OnClickListener()
     {
       @Override
       public void onClick(View v)
       {
-        launchHomeScreen();
+        launchLoginActivity(context);
       }
     });
   }

@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.SpannableString;
@@ -36,70 +37,40 @@ public class LoginActivity extends AppCompatActivity
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_login);
     
-    inisialisasi();
+    inisialisasi(this);
+    checkSession(this);
+    btnRegisterListener(this);
+    tvLupaPasswordListener(this);
+    btnLoginListener(this);
     
-    if (sessionUtil.isLoggedIn(this)){
-      Intent intent = new Intent(this, DashboardActivity.class);
-      startActivity(intent);
-      finish();
-    }
-    
-    btnLogin.setOnClickListener(new View.OnClickListener()
-    {
-      @Override
-      public void onClick(View v)
-      {
-        if(!validateData())
-        {
-          progressDialog = ProgressDialog.show(LoginActivity.this, "", "Logging in...", true, false);
-          userLogin();
-        }
-        else
-        {
-          Toast.makeText(LoginActivity.this, "Maaf semua field wajib diisi",Toast.LENGTH_SHORT).show();
-        }
-      }
-    });
-    
-    btnregister.setOnClickListener(new View.OnClickListener()
-    {
-      @Override
-      public void onClick(View v)
-      {
-        Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
-        startActivity(intent);
-        finish();
-      }
-    });
+  }
   
+  private void inisialisasi(Context context)
+  {
     String udata="Lupa password klik disini";
     SpannableString content = new SpannableString(udata);
     content.setSpan(new UnderlineSpan(), 19, udata.length(), 0);
-    tvlupapassword.setText(content);
     
-    tvlupapassword.setOnClickListener(new View.OnClickListener()
-    {
-      @Override
-      public void onClick(View v)
-      {
-        Intent intent = new Intent(LoginActivity.this, LupaPasswordActivity.class);
-        startActivity(intent);
-        finish();
-      }
-    });
-  }
-  
-  private void inisialisasi()
-  {
-    sessionUtil = new SessionUtil(this);
+    sessionUtil = new SessionUtil(context);
     
     etusername  = findViewById(R.id.et_log_username);
     etpassword  = findViewById(R.id.et_log_password);
     
     tvlupapassword = findViewById(R.id.tv_log_lupapassword);
+    tvlupapassword.setText(content);
   
     btnLogin    = findViewById(R.id.btn_log_login);
     btnregister = findViewById(R.id.btn_log_registrasi);
+  }
+  
+  private void checkSession(Context context)
+  {
+    if (sessionUtil.isLoggedIn(context))
+    {
+      Intent intent = new Intent(context, DashboardActivity.class);
+      startActivity(intent);
+      finish();
+    }
   }
   
   private boolean validateData()
@@ -108,11 +79,31 @@ public class LoginActivity extends AppCompatActivity
             || TextUtils.isEmpty(etpassword.getText().toString());
   }
   
-  private void userLogin()
+  private void btnLoginListener(final Context context)
+  {
+    btnLogin.setOnClickListener(new View.OnClickListener()
+    {
+      @Override
+      public void onClick(View v)
+      {
+        if(!validateData())
+        {
+          progressDialog = ProgressDialog.show(context, "", "Logging in...", true, false);
+          userLogin(context);
+        }
+        else
+        {
+          Toast.makeText(context, "Maaf semua field wajib diisi",Toast.LENGTH_SHORT).show();
+        }
+      }
+    });
+  }
+  
+  private void userLogin(final Context context)
   {
     String username = etusername.getText().toString();
     String password = etpassword.getText().toString();
-  
+    
     Call<UserModel.UserDataModel> call = APIService.Factory.create().postLogin(username, password);
     
     call.enqueue(new Callback<UserModel.UserDataModel>()
@@ -123,20 +114,26 @@ public class LoginActivity extends AppCompatActivity
         progressDialog.dismiss();
         if (response.isSuccessful())
         {
-          assert response.body() != null;
-          if (response.body().getMessage().equalsIgnoreCase("Welcome"))
+          if (response.body() != null)
           {
-            if (sessionUtil.login(LoginActivity.this, response.body().getResults().get(0)))
+            if (response.body().getMessage().equalsIgnoreCase("Welcome"))
             {
-              Toast.makeText(LoginActivity.this, response.body().getMessage(), Toast.LENGTH_SHORT).show();
-              Intent intent = new Intent(LoginActivity.this, DashboardActivity.class);
-              startActivity(intent);
-              finish();
+              if (sessionUtil.login(context, response.body().getResults().get(0)))
+              {
+                Toast.makeText(context, response.body().getMessage(), Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(context, DashboardActivity.class);
+                startActivity(intent);
+                finish();
+              }
+            }
+            else
+            {
+              Toast.makeText(context, response.body().getMessage(), Toast.LENGTH_SHORT).show();
             }
           }
           else
           {
-            Toast.makeText(LoginActivity.this, response.body().getMessage(), Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, "Maaf server memberikan response yang salah", Toast.LENGTH_SHORT).show();
           }
         }
       }
@@ -145,10 +142,36 @@ public class LoginActivity extends AppCompatActivity
       public void onFailure(@NonNull Call<UserModel.UserDataModel> call, @NonNull Throwable t)
       {
         progressDialog.dismiss();
-        Toast.makeText(LoginActivity.this, t.getMessage(), Toast.LENGTH_SHORT).show();
+        Toast.makeText(context, t.getMessage(), Toast.LENGTH_SHORT).show();
       }
     });
-    
-    
+  }
+  
+  private void btnRegisterListener(final Context context)
+  {
+    btnregister.setOnClickListener(new View.OnClickListener()
+    {
+      @Override
+      public void onClick(View v)
+      {
+        Intent intent = new Intent(context, RegisterActivity.class);
+        startActivity(intent);
+        finish();
+      }
+    });
+  }
+  
+  private void tvLupaPasswordListener(final Context context)
+  {
+    tvlupapassword.setOnClickListener(new View.OnClickListener()
+    {
+      @Override
+      public void onClick(View v)
+      {
+        Intent intent = new Intent(context, LupaPasswordActivity.class);
+        startActivity(intent);
+        finish();
+      }
+    });
   }
 }

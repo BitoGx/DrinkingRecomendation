@@ -10,7 +10,6 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
@@ -29,7 +28,6 @@ public class DashboardActivity extends AppCompatActivity implements NavigationVi
 {
   private DrawerLayout drawer;
   private ProgressDialog progressDialog;
-  private static final String TAG = "Find Me";
   private NavigationView navigationView;
   private Toolbar toolbar;
   
@@ -44,20 +42,9 @@ public class DashboardActivity extends AppCompatActivity implements NavigationVi
     inisialisasi();
     hideItem();
     
-    setSupportActionBar(toolbar);
+    actionBarListener();
     
-    navigationView.setNavigationItemSelectedListener(this);
-  
-    ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar,
-            R.string.navigation_drawer_open,
-            R.string.navigation_drawer_close);
-    drawer.addDrawerListener(toggle);
-    toggle.syncState();
-  
-    progressDialog = ProgressDialog.show(DashboardActivity.this, "", "Load Data.....", true, false);
     loadUserData();
-    
-    
   }
   
   @Override
@@ -66,11 +53,14 @@ public class DashboardActivity extends AppCompatActivity implements NavigationVi
     if (drawer.isDrawerOpen(GravityCompat.START))
     {
       drawer.closeDrawer(GravityCompat.START);
-    } else
+    }
+    else
     {
       super.onBackPressed();
     }
   }
+  
+  
   
   private void inisialisasi()
   {
@@ -79,12 +69,23 @@ public class DashboardActivity extends AppCompatActivity implements NavigationVi
     drawer = findViewById(R.id.drawer_dashboard_layout);
     navigationView = findViewById(R.id.nav_dashboard_view);
     toolbar = findViewById(R.id.toolbar);
+    setSupportActionBar(toolbar);
+    navigationView.setNavigationItemSelectedListener(this);
   }
   
   private void hideItem()
   {
     Menu nav_Menu = navigationView.getMenu();
     nav_Menu.findItem(R.id.nav_dashboard).setVisible(false);
+  }
+  
+  private void actionBarListener()
+  {
+    ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar,
+            R.string.navigation_drawer_open,
+            R.string.navigation_drawer_close);
+    drawer.addDrawerListener(toggle);
+    toggle.syncState();
   }
   
   @Override
@@ -100,7 +101,13 @@ public class DashboardActivity extends AppCompatActivity implements NavigationVi
   
     if(id == R.id.nav_rekomendasi)
     {
-      Intent intent = new Intent(this, MapsActivity.class);
+      Intent intent = new Intent(this, StopwatchActivity.class);
+      startActivity(intent);
+    }
+  
+    if(id == R.id.nav_riwayat)
+    {
+      Intent intent = new Intent(this, RiwayatActivity.class);
       startActivity(intent);
     }
   
@@ -128,6 +135,8 @@ public class DashboardActivity extends AppCompatActivity implements NavigationVi
   
   private void loadUserData()
   {
+    progressDialog = ProgressDialog.show(DashboardActivity.this, "", "Load Data.....", true, false);
+    
     String id = sessionUtil.getLoggedUser(DashboardActivity.this).getUserid();
     
     Call<SelectUserModel> call = APIService.Factory.create().postSelectUser(id);
@@ -139,8 +148,6 @@ public class DashboardActivity extends AppCompatActivity implements NavigationVi
         progressDialog.dismiss();
         TextView tvopen = findViewById(R.id.tv_dashboard_open);
         assert response.body() != null;
-        String msg = response.body().getNama();
-        Log.i(TAG, "Nuce find  me "+msg);
         tvopen.setText(response.body().getNama());
       }
       

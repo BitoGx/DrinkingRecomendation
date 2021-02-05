@@ -5,6 +5,7 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -36,7 +37,7 @@ public class GantiPasswordActivity extends AppCompatActivity
     setUpActionBar();
     inisialisasi();
     
-    btnUpdateListener();
+    btnUpdateListener(this);
   }
   
   private void setUpActionBar()
@@ -60,7 +61,6 @@ public class GantiPasswordActivity extends AppCompatActivity
   
   private boolean validateData()
   {
-    
     return TextUtils.isEmpty(etoldpass.getText().toString())
             || TextUtils.isEmpty(etnewfirstpass.getText().toString())
             || TextUtils.isEmpty(etnewsecondpass.getText().toString());
@@ -71,7 +71,7 @@ public class GantiPasswordActivity extends AppCompatActivity
     return etnewfirstpass.getText().toString().equals(etnewsecondpass.getText().toString());
   }
   
-  private void btnUpdateListener()
+  private void btnUpdateListener(final Context context)
   {
     btnupdate.setOnClickListener(new View.OnClickListener()
     {
@@ -80,28 +80,28 @@ public class GantiPasswordActivity extends AppCompatActivity
       {
         if(validateData())
         {
-          Toast.makeText(GantiPasswordActivity.this, "Maaf semua field wajib diisi",Toast.LENGTH_SHORT).show();
+          Toast.makeText(context, "Maaf semua field wajib diisi",Toast.LENGTH_SHORT).show();
         }
         else
         {
           if(!validatePassword())
           {
-            Toast.makeText(GantiPasswordActivity.this, "Maaf password pertama dan kedua tidak sama",Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, "Maaf password pertama dan kedua tidak sama",Toast.LENGTH_SHORT).show();
             etnewfirstpass.requestFocus();
           }
           else
           {
-            progressDialog = ProgressDialog.show(GantiPasswordActivity.this, "", "Updating...", true, false);
-            updatePassword();
+            progressDialog = ProgressDialog.show(context, "", "Updating...", true, false);
+            updatePassword(context);
           }
         }
       }
     });
   }
   
-  private void updatePassword()
+  private void updatePassword(final Context context)
   {
-    String id      = sessionUtil.getLoggedUser(GantiPasswordActivity.this).getUserid();
+    String id      = sessionUtil.getLoggedUser(context).getUserid();
     String oldpass = etoldpass.getText().toString();
     String newpass = etnewfirstpass.getText().toString();
   
@@ -115,17 +115,23 @@ public class GantiPasswordActivity extends AppCompatActivity
         progressDialog.dismiss();
         if (response.isSuccessful())
         {
-          assert response.body() != null;
-          if (response.body().getMessage().equalsIgnoreCase("Berhasil"))
+          if (response.body() != null)
           {
-            Toast.makeText(GantiPasswordActivity.this, "Password berhasil diganti", Toast.LENGTH_SHORT).show();
-            Intent intent = new Intent(GantiPasswordActivity.this, DashboardActivity.class);
-            startActivity(intent);
-            finish();
+            if (response.body().getMessage().equalsIgnoreCase("Berhasil"))
+            {
+              Toast.makeText(context, "Password berhasil diganti", Toast.LENGTH_SHORT).show();
+              Intent intent = new Intent(context, DashboardActivity.class);
+              startActivity(intent);
+              finish();
+            }
+            else
+            {
+              Toast.makeText(context, response.body().getMessage(), Toast.LENGTH_SHORT).show();
+            }
           }
           else
           {
-            Toast.makeText(GantiPasswordActivity.this, response.body().getMessage(), Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, "Maaf server memberikan response yang salah", Toast.LENGTH_SHORT).show();
           }
         }
       }
@@ -134,7 +140,7 @@ public class GantiPasswordActivity extends AppCompatActivity
       public void onFailure(@NonNull Call<UserModel.UserDataModel> call, @NonNull Throwable t)
       {
         progressDialog.dismiss();
-        Toast.makeText(GantiPasswordActivity.this, t.getMessage(), Toast.LENGTH_SHORT).show();
+        Toast.makeText(context, t.getMessage(), Toast.LENGTH_SHORT).show();
       }
     });
   }

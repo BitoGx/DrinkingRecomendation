@@ -23,10 +23,10 @@ public class ActivityRecognitionActivity extends AppCompatActivity
   
   private String TAG = ActivityRecognitionActivity.class.getSimpleName();
   BroadcastReceiver broadcastReceiver;
-  
+  private Boolean running;
   private TextView txtActivity, txtConfidence;
   private ImageView imgActivity;
-  private Button btnStartTrcking, btnStopTracking;
+  private Button btnTracking;
   
   @Override
   protected void onCreate(Bundle savedInstanceState)
@@ -39,23 +39,23 @@ public class ActivityRecognitionActivity extends AppCompatActivity
     actionbar.setDisplayHomeAsUpEnabled(true);
     actionbar.setTitle(R.string.menu_activity_recognition);
     
+    running = false;
     txtActivity = findViewById(R.id.txt_activity);
     txtConfidence = findViewById(R.id.txt_confidence);
     imgActivity = findViewById(R.id.img_activity);
-    btnStartTrcking = findViewById(R.id.btn_start_tracking);
-    btnStopTracking = findViewById(R.id.btn_stop_tracking);
-    
-    btnStartTrcking.setOnClickListener(new View.OnClickListener() {
+    btnTracking = findViewById(R.id.btn_start_tracking);
+  
+    btnTracking.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View view) {
-        startTracking();
-      }
-    });
-    
-    btnStopTracking.setOnClickListener(new View.OnClickListener() {
-      @Override
-      public void onClick(View view) {
-        stopTracking();
+        if(!running)
+        {
+          startTracking();
+        }
+        else
+        {
+          stopTracking();
+        }
       }
     });
     
@@ -147,11 +147,15 @@ public class ActivityRecognitionActivity extends AppCompatActivity
   
   private void startTracking() {
     Intent intent = new Intent(ActivityRecognitionActivity.this, BackgroundDetectedActivitiesService.class);
+    running = true;
+    btnTracking.setText(R.string.stop_tracking);
     startService(intent);
   }
   
   private void stopTracking() {
     Intent intent = new Intent(ActivityRecognitionActivity.this, BackgroundDetectedActivitiesService.class);
+    running = false;
+    btnTracking.setText(R.string.start_tracking);
     stopService(intent);
   }
 }

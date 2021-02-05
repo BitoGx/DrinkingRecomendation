@@ -7,11 +7,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -44,7 +44,6 @@ public class UpdateProfilActivity extends AppCompatActivity
   private ProgressDialog progressDialog;
   private AlertDialog.Builder alertDialogbuilder;
   
-  private static final String TAG = "Find Me";
   private String email;
   
   @Override
@@ -56,8 +55,8 @@ public class UpdateProfilActivity extends AppCompatActivity
     setUpActionBar();
     inisialisasi();
     showUserData();
-    editCalendar();
-    btnUpdateListener();
+    editCalendar(this);
+    btnUpdateListener(this);
   }
   
   private void setUpActionBar()
@@ -90,8 +89,6 @@ public class UpdateProfilActivity extends AppCompatActivity
     btnupdate = findViewById(R.id.btn_upprofile_update);
   }
   
-  
-  
   private void showUserData()
   {
     etemail.setText(sessionUtil.getLoggedUser(this).getEmail());
@@ -110,14 +107,14 @@ public class UpdateProfilActivity extends AppCompatActivity
     }
   }
   
-  private void editCalendar()
+  private void editCalendar(final Context context)
   {
     etttl.setOnClickListener(new View.OnClickListener()
     {
       @Override
       public void onClick(View v)
       {
-        new DatePickerDialog(UpdateProfilActivity.this, onDateSetListener,
+        new DatePickerDialog(context, onDateSetListener,
                 selectedCalendar.get(Calendar.YEAR),
                 selectedCalendar.get(Calendar.MONTH),
                 selectedCalendar.get(Calendar.DAY_OF_MONTH)).show();
@@ -175,7 +172,7 @@ public class UpdateProfilActivity extends AppCompatActivity
             || TextUtils.isEmpty(rbjeniskelamin.getText().toString());
   }
   
-  private void btnUpdateListener()
+  private void btnUpdateListener(final Context context)
   {
     btnupdate.setOnClickListener(new View.OnClickListener()
     {
@@ -184,18 +181,18 @@ public class UpdateProfilActivity extends AppCompatActivity
       {
         if(validateData())
         {
-          Toast.makeText(UpdateProfilActivity.this, "Maaf semua field wajib diisi",Toast.LENGTH_SHORT).show();
+          Toast.makeText(context, "Maaf semua field wajib diisi",Toast.LENGTH_SHORT).show();
         }
         else
         {
           if(checkEmail(etemail.getText().toString()))
           {
-            setUpConfirmationDialog();
+            setUpConfirmationDialog(context);
           }
           else
           {
-            progressDialog = ProgressDialog.show(UpdateProfilActivity.this, "", "Updating.....", true, false);
-            updateProfil();
+            progressDialog = ProgressDialog.show(context, "", "Updating.....", true, false);
+            updateProfil(context);
           }
         }
       }
@@ -207,7 +204,7 @@ public class UpdateProfilActivity extends AppCompatActivity
     return !email.equalsIgnoreCase(sessionUtil.getLoggedUser(this).getEmail());
   }
   
-  private void setUpConfirmationDialog()
+  private void setUpConfirmationDialog(final Context context)
   {
     alertDialogbuilder.setTitle("Konfirmasi");
     alertDialogbuilder.setMessage("Apakah anda yakin ingin mengubah email anda ?");
@@ -217,8 +214,8 @@ public class UpdateProfilActivity extends AppCompatActivity
       @Override
       public void onClick(DialogInterface dialog, int which)
       {
-        progressDialog = ProgressDialog.show(UpdateProfilActivity.this, "", "Updating.....", true, false);
-        updateProfil();
+        progressDialog = ProgressDialog.show(context, "", "Updating.....", true, false);
+        updateProfil(context);
         dialog.dismiss();
       }
     });
@@ -235,7 +232,7 @@ public class UpdateProfilActivity extends AppCompatActivity
     alertDialogbuilder.show();
   }
   
-  private void updateProfil()
+  private void updateProfil(final Context context)
   {
     String id           = sessionUtil.getLoggedUser(this).getUserid();
     email               = etemail.getText().toString();
@@ -256,22 +253,32 @@ public class UpdateProfilActivity extends AppCompatActivity
       public void onResponse(@NonNull Call<UserModel.UserDataModel> call, @NonNull Response<UserModel.UserDataModel> response)
       {
         progressDialog.dismiss();
-        assert response.body() != null;
-        String msg = response.body().getMessage();
-        Log.i(TAG, "Nuce find  me "+msg);
-        if(checkEmail(email))
+        if (response.isSuccessful())
         {
-          if(response.body().getMessage().equalsIgnoreCase("Silahkan Cek Email Anda"))
+          if (response.body() != null)
           {
-            Toast.makeText(UpdateProfilActivity.this, response.body().getMessage(), Toast.LENGTH_SHORT).show();
-            sessionUtil.logout(UpdateProfilActivity.this);
-            Intent intent = new Intent(UpdateProfilActivity.this, LoginActivity.class);
-            startActivity(intent);
-            finish();
-          }
-          else
-          {
-            Toast.makeText(UpdateProfilActivity.this, response.body().getMessage(), Toast.LENGTH_SHORT).show();
+            if(checkEmail(email))
+            {
+              if(response.body().getMessage().equalsIgnoreCase("Silahkan Cek Email Anda"))
+              {
+                Toast.makeText(context, response.body().getMessage(), Toast.LENGTH_SHORT).show();
+                sessionUtil.logout(context);
+                Intent intent = new Intent(context, LoginActivity.class);
+                startActivity(intent);
+                finish();
+              }
+              else
+              {
+                Toast.makeText(context, response.body().getMessage(), Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(context, DashboardActivity.class);
+                startActivity(intent);
+                finish();
+              }
+            }
+            else
+            {
+              Toast.makeText(context, "Maaf server memberikan response yang salah", Toast.LENGTH_SHORT).show();
+            }
           }
         }
       }
@@ -280,8 +287,7 @@ public class UpdateProfilActivity extends AppCompatActivity
       public void onFailure(@NonNull Call<UserModel.UserDataModel> call, @NonNull Throwable t)
       {
         progressDialog.dismiss();
-        Log.i(TAG, "Welp find  me "+t.getMessage());
-        Toast.makeText(UpdateProfilActivity.this, t.getMessage(), Toast.LENGTH_SHORT).show();
+        Toast.makeText(context, t.getMessage(), Toast.LENGTH_SHORT).show();
       }
     });
   }
