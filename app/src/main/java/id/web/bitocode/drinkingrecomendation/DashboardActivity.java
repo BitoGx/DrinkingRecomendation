@@ -113,7 +113,6 @@ public class DashboardActivity extends AppCompatActivity implements NavigationVi
     {
       Intent intent = new Intent(this, StopwatchActivity.class);
       startActivity(intent);
-      finish();
     }
     
     if (id == R.id.nav_riwayat)

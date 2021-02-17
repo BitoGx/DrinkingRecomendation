@@ -25,44 +25,45 @@ import retrofit2.Response;
 
 public class LoginActivity extends AppCompatActivity
 {
-  private EditText etusername,etpassword;
+  private EditText etusername, etpassword;
   private TextView tvlupapassword;
-  private Button btnregister,btnLogin;
+  private Button btnregister, btnLogin;
   private ProgressDialog progressDialog;
   private SessionUtil sessionUtil;
-  
+
+
   @Override
   protected void onCreate(Bundle savedInstanceState)
   {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_login);
-    
+
     inisialisasi(this);
     checkSession(this);
     btnRegisterListener(this);
     tvLupaPasswordListener(this);
     btnLoginListener(this);
-    
+
   }
-  
+
   private void inisialisasi(Context context)
   {
-    String udata="Lupa password klik disini";
+    String udata = "Lupa password klik disini";
     SpannableString content = new SpannableString(udata);
     content.setSpan(new UnderlineSpan(), 19, udata.length(), 0);
-    
+
     sessionUtil = new SessionUtil(context);
-    
-    etusername  = findViewById(R.id.et_log_username);
-    etpassword  = findViewById(R.id.et_log_password);
-    
+
+    etusername = findViewById(R.id.et_log_username);
+    etpassword = findViewById(R.id.et_log_password);
+
     tvlupapassword = findViewById(R.id.tv_log_lupapassword);
     tvlupapassword.setText(content);
-  
-    btnLogin    = findViewById(R.id.btn_log_login);
+
+    btnLogin = findViewById(R.id.btn_log_login);
     btnregister = findViewById(R.id.btn_log_registrasi);
   }
-  
+
   private void checkSession(Context context)
   {
     if (sessionUtil.isLoggedIn(context))
@@ -72,13 +73,13 @@ public class LoginActivity extends AppCompatActivity
       finish();
     }
   }
-  
+
   private boolean validateData()
   {
     return TextUtils.isEmpty(etusername.getText().toString())
             || TextUtils.isEmpty(etpassword.getText().toString());
   }
-  
+
   private void btnLoginListener(final Context context)
   {
     btnLogin.setOnClickListener(new View.OnClickListener()
@@ -86,26 +87,25 @@ public class LoginActivity extends AppCompatActivity
       @Override
       public void onClick(View v)
       {
-        if(!validateData())
+        if (!validateData())
         {
           progressDialog = ProgressDialog.show(context, "", "Logging in...", true, false);
           userLogin(context);
-        }
-        else
+        } else
         {
-          Toast.makeText(context, "Maaf semua field wajib diisi",Toast.LENGTH_SHORT).show();
+          Toast.makeText(context, "Maaf semua field wajib diisi", Toast.LENGTH_SHORT).show();
         }
       }
     });
   }
-  
+
   private void userLogin(final Context context)
   {
     String username = etusername.getText().toString();
     String password = etpassword.getText().toString();
-    
+
     Call<UserModel.UserDataModel> call = APIService.Factory.create().postLogin(username, password);
-    
+
     call.enqueue(new Callback<UserModel.UserDataModel>()
     {
       @Override
@@ -125,19 +125,17 @@ public class LoginActivity extends AppCompatActivity
                 startActivity(intent);
                 finish();
               }
-            }
-            else
+            } else
             {
               Toast.makeText(context, response.body().getMessage(), Toast.LENGTH_SHORT).show();
             }
-          }
-          else
+          } else
           {
             Toast.makeText(context, "Maaf server memberikan response yang salah", Toast.LENGTH_SHORT).show();
           }
         }
       }
-  
+
       @Override
       public void onFailure(@NonNull Call<UserModel.UserDataModel> call, @NonNull Throwable t)
       {
@@ -146,7 +144,7 @@ public class LoginActivity extends AppCompatActivity
       }
     });
   }
-  
+
   private void btnRegisterListener(final Context context)
   {
     btnregister.setOnClickListener(new View.OnClickListener()
@@ -160,7 +158,7 @@ public class LoginActivity extends AppCompatActivity
       }
     });
   }
-  
+
   private void tvLupaPasswordListener(final Context context)
   {
     tvlupapassword.setOnClickListener(new View.OnClickListener()

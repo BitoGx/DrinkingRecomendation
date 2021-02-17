@@ -2,9 +2,12 @@ package id.web.bitocode.drinkingrecomendation;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 import java.util.Locale;
@@ -13,6 +16,7 @@ public class StopwatchActivity extends AppCompatActivity
 {
   private int seconds = 0;
   private boolean running, wasRunning;
+  private Button btnstart;
   
   @Override
   protected void onCreate(Bundle savedInstanceState)
@@ -20,8 +24,10 @@ public class StopwatchActivity extends AppCompatActivity
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_stopwatch);
 
+    inisialisasi();
     runTimer();
   }
+
   @Override
   public void onSaveInstanceState(Bundle savedInstanceState)
   {
@@ -30,9 +36,7 @@ public class StopwatchActivity extends AppCompatActivity
     savedInstanceState.putBoolean("running", running);
     savedInstanceState.putBoolean("wasRunning", wasRunning);
   }
-  
-  // If the activity is paused,
-  // stop the stopwatch.
+
   @Override
   protected void onPause()
   {
@@ -40,10 +44,7 @@ public class StopwatchActivity extends AppCompatActivity
     wasRunning = running;
     running = false;
   }
-  
-  // If the activity is resumed,
-  // start the stopwatch
-  // again if it was running previously.
+
   @Override
   protected void onResume()
   {
@@ -53,17 +54,27 @@ public class StopwatchActivity extends AppCompatActivity
       running = true;
     }
   }
-  
-  public void onClickStart(View view)
+
+  private void inisialisasi()
   {
-    running = true;
+    btnstart = findViewById(R.id.btn_stopwatch_start);
   }
-  
-  public void onClickStop(View view)
+
+
+  public void onStopwatchClick(View view)
   {
-    running = false;
+    if(!running)
+    {
+      running = true;
+      btnstart.setText(R.string.pause);
+    }
+    else
+    {
+      running = false;
+      btnstart.setText(R.string.start);
+    }
   }
-  
+
   public void onClickReset(View view)
   {
     running = false;
@@ -74,7 +85,7 @@ public class StopwatchActivity extends AppCompatActivity
   {
     final TextView timeView = findViewById(R.id.time_view);
     final Handler handler = new Handler();
-    
+
     handler.post(new Runnable()
     {
       @Override
@@ -93,7 +104,6 @@ public class StopwatchActivity extends AppCompatActivity
         {
           seconds++;
         }
-        
         handler.postDelayed(this, 1000);
       }
     });

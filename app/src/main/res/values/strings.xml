@@ -28,6 +28,7 @@
   <string name="next">Next</string>
   <string name="skip">Skip</string>
   <string name="start">Start</string>
+  <string name="pause">Pause</string>
 
   <string name="slide_1_title">Running</string>
   <string name="slide_1_desc">The easiest way to record your run</string>
@@ -73,10 +74,7 @@
   <string name="rekomendasi_awal">Rekomendasi Awal</string>
   <string name="rekomendasi_akhir">Rekomendasi Akhir</string>
   <string name="title_activity_main">MainActivity</string>
-  <!-- Strings used for fragments for navigation -->
-  <string name="first_fragment_label">First Fragment</string>
-  <string name="second_fragment_label">Second Fragment</string>
-  <string name="previous">Previous</string>
+
 
   <string name="user_profile">User Profile</string>
   <string name="nama_dashboard">Nama : </string>
