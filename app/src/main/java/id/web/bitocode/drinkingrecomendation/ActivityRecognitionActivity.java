@@ -16,6 +16,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.android.gms.location.DetectedActivity;
+
+import id.web.bitocode.drinkingrecomendation.Service.BackgroundDetectedActivitiesService;
 import id.web.bitocode.drinkingrecomendation.config.Constants;
 
 public class ActivityRecognitionActivity extends AppCompatActivity
@@ -81,19 +83,9 @@ public class ActivityRecognitionActivity extends AppCompatActivity
     int icon = R.drawable.ic_still;
     
     switch (type) {
-      case DetectedActivity.IN_VEHICLE: {
-        label = getString(R.string.activity_in_vehicle);
-        icon = R.drawable.ic_driving;
-        break;
-      }
       case DetectedActivity.ON_BICYCLE: {
         label = getString(R.string.activity_on_bicycle);
         icon = R.drawable.ic_on_bicycle;
-        break;
-      }
-      case DetectedActivity.ON_FOOT: {
-        label = getString(R.string.activity_on_foot);
-        icon = R.drawable.ic_walking;
         break;
       }
       case DetectedActivity.RUNNING: {
@@ -103,11 +95,6 @@ public class ActivityRecognitionActivity extends AppCompatActivity
       }
       case DetectedActivity.STILL: {
         label = getString(R.string.activity_still);
-        break;
-      }
-      case DetectedActivity.TILTING: {
-        label = getString(R.string.activity_tilting);
-        icon = R.drawable.ic_tilting;
         break;
       }
       case DetectedActivity.WALKING: {

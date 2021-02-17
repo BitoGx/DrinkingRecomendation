@@ -4,6 +4,7 @@ import java.util.concurrent.TimeUnit;
 
 import id.web.bitocode.drinkingrecomendation.config.Constants;
 import id.web.bitocode.drinkingrecomendation.model.MessageModel;
+import id.web.bitocode.drinkingrecomendation.model.SelectRiwayatModel;
 import id.web.bitocode.drinkingrecomendation.model.SelectUserModel;
 import id.web.bitocode.drinkingrecomendation.model.UserModel;
 import okhttp3.OkHttpClient;
@@ -60,6 +61,10 @@ public interface APIService
   @FormUrlEncoded
   @POST("API/selectUser.php")
   Call<SelectUserModel> postSelectUser(@Field("id") String id);
+  
+  @FormUrlEncoded
+  @POST("API/selectRiwayat.php")
+  Call<SelectRiwayatModel> postSelectRiwayat(@Field("id") String id);
   
   
   

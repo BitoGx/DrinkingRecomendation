@@ -1,12 +1,14 @@
-package id.web.bitocode.drinkingrecomendation;
+package id.web.bitocode.drinkingrecomendation.Service;
 
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
 import android.os.Binder;
 import android.os.IBinder;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+
 import android.widget.Toast;
 
 import com.google.android.gms.location.ActivityRecognitionClient;
@@ -16,26 +18,21 @@ import com.google.android.gms.tasks.Task;
 
 import id.web.bitocode.drinkingrecomendation.config.Constants;
 
-public class BackgroundDetectedActivitiesService extends Service {
-  private static final String TAG = BackgroundDetectedActivitiesService.class.getSimpleName();
+public class BackgroundDetectedActivitiesService extends Service
+{
   
+  IBinder mBinder = new BackgroundDetectedActivitiesService.LocalBinder();
   private PendingIntent mPendingIntent;
   private ActivityRecognitionClient mActivityRecognitionClient;
   
-  IBinder mBinder = new BackgroundDetectedActivitiesService.LocalBinder();
-  
-  public class LocalBinder extends Binder {
-    public BackgroundDetectedActivitiesService getServerInstance() {
-      return BackgroundDetectedActivitiesService.this;
-    }
-  }
-  
-  public BackgroundDetectedActivitiesService() {
+  public BackgroundDetectedActivitiesService()
+  {
   
   }
   
   @Override
-  public void onCreate() {
+  public void onCreate()
+  {
     super.onCreate();
     mActivityRecognitionClient = new ActivityRecognitionClient(this);
     Intent mIntentService = new Intent(this, DetectedActivitiesIntentService.class);
@@ -45,24 +42,29 @@ public class BackgroundDetectedActivitiesService extends Service {
   
   @Nullable
   @Override
-  public IBinder onBind(Intent intent) {
+  public IBinder onBind(Intent intent)
+  {
     return mBinder;
   }
   
   @Override
-  public int onStartCommand(Intent intent, int flags, int startId) {
+  public int onStartCommand(Intent intent, int flags, int startId)
+  {
     super.onStartCommand(intent, flags, startId);
     return START_STICKY;
   }
   
-  public void requestActivityUpdatesButtonHandler() {
+  public void requestActivityUpdatesButtonHandler()
+  {
     Task<Void> task = mActivityRecognitionClient.requestActivityUpdates(
             Constants.DETECTION_INTERVAL_IN_MILLISECONDS,
             mPendingIntent);
     
-    task.addOnSuccessListener(new OnSuccessListener<Void>() {
+    task.addOnSuccessListener(new OnSuccessListener<Void>()
+    {
       @Override
-      public void onSuccess(Void result) {
+      public void onSuccess(Void result)
+      {
         Toast.makeText(getApplicationContext(),
                 "Successfully requested activity updates",
                 Toast.LENGTH_SHORT)
@@ -70,9 +72,11 @@ public class BackgroundDetectedActivitiesService extends Service {
       }
     });
     
-    task.addOnFailureListener(new OnFailureListener() {
+    task.addOnFailureListener(new OnFailureListener()
+    {
       @Override
-      public void onFailure(@NonNull Exception e) {
+      public void onFailure(@NonNull Exception e)
+      {
         Toast.makeText(getApplicationContext(),
                 "Requesting activity updates failed to start",
                 Toast.LENGTH_SHORT)
@@ -81,12 +85,15 @@ public class BackgroundDetectedActivitiesService extends Service {
     });
   }
   
-  public void removeActivityUpdatesButtonHandler() {
+  public void removeActivityUpdatesButtonHandler()
+  {
     Task<Void> task = mActivityRecognitionClient.removeActivityUpdates(
             mPendingIntent);
-    task.addOnSuccessListener(new OnSuccessListener<Void>() {
+    task.addOnSuccessListener(new OnSuccessListener<Void>()
+    {
       @Override
-      public void onSuccess(Void result) {
+      public void onSuccess(Void result)
+      {
         Toast.makeText(getApplicationContext(),
                 "Removed activity updates successfully!",
                 Toast.LENGTH_SHORT)
@@ -94,9 +101,11 @@ public class BackgroundDetectedActivitiesService extends Service {
       }
     });
     
-    task.addOnFailureListener(new OnFailureListener() {
+    task.addOnFailureListener(new OnFailureListener()
+    {
       @Override
-      public void onFailure(@NonNull Exception e) {
+      public void onFailure(@NonNull Exception e)
+      {
         Toast.makeText(getApplicationContext(), "Failed to remove activity updates!",
                 Toast.LENGTH_SHORT).show();
       }
@@ -104,8 +113,17 @@ public class BackgroundDetectedActivitiesService extends Service {
   }
   
   @Override
-  public void onDestroy() {
+  public void onDestroy()
+  {
     super.onDestroy();
     removeActivityUpdatesButtonHandler();
+  }
+  
+  public class LocalBinder extends Binder
+  {
+    public BackgroundDetectedActivitiesService getServerInstance()
+    {
+      return BackgroundDetectedActivitiesService.this;
+    }
   }
 }

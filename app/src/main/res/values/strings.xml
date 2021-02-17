@@ -1,5 +1,5 @@
 <resources>
-  <string name="app_name">DrinkingRecomendation</string>
+  <string name="app_name">Water Recomendation</string>
   <string name="activity_in_vehicle">In Vehicle</string>
   <string name="activity_on_bicycle">On Bicycle</string>
   <string name="activity_on_foot">On Foot</string>
@@ -25,10 +25,9 @@
   <string name="back">Back</string>
   <string name="validasi_tanggal">Maaf tanggal tidak valid</string>
 
-  <string name="title_activity_welcome">Home Screen</string>
-  <string name="next">NEXT</string>
-  <string name="skip">SKIP</string>
-  <string name="start">GOT IT</string>
+  <string name="next">Next</string>
+  <string name="skip">Skip</string>
+  <string name="start">Start</string>
 
   <string name="slide_1_title">Running</string>
   <string name="slide_1_desc">The easiest way to record your run</string>
@@ -39,7 +38,6 @@
   <string name="slide_3_title">Cycling</string>
   <string name="slide_3_desc">It also can detect when you are cyling with your bike</string>
 
-  <string name="play_again_desc">To see the welcome slider again, goto Settings -> apps -> welcome slider -> clear data</string>
   <string name="play_again">Play Again</string>
   <string name="appicon">AppIcon</string>
   <string name="login">Login</string>
@@ -74,5 +72,15 @@
   <string name="waktu">Waktu</string>
   <string name="rekomendasi_awal">Rekomendasi Awal</string>
   <string name="rekomendasi_akhir">Rekomendasi Akhir</string>
+  <string name="title_activity_main">MainActivity</string>
+  <!-- Strings used for fragments for navigation -->
+  <string name="first_fragment_label">First Fragment</string>
+  <string name="second_fragment_label">Second Fragment</string>
+  <string name="previous">Previous</string>
 
+  <string name="user_profile">User Profile</string>
+  <string name="nama_dashboard">Nama : </string>
+  <string name="ttl_dashboard">Tanggal Lahir : </string>
+  <string name="tinggi_dashboard">Tinggi : </string>
+  <string name="berat_dashboard">Berat : </string>
 </resources>

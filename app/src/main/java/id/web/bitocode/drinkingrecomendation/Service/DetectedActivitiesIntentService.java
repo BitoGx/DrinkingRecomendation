@@ -1,4 +1,4 @@
-package id.web.bitocode.drinkingrecomendation;
+package id.web.bitocode.drinkingrecomendation.Service;
 
 import android.app.IntentService;
 import android.content.Intent;
@@ -18,7 +18,6 @@ public class DetectedActivitiesIntentService  extends IntentService {
   
   public DetectedActivitiesIntentService()
   {
-    // Use the TAG to name the worker thread.
     super(TAG);
   }
   

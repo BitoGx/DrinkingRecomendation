@@ -12,23 +12,14 @@ import java.util.Locale;
 public class StopwatchActivity extends AppCompatActivity
 {
   private int seconds = 0;
-  private boolean running;
-  private boolean wasRunning;
+  private boolean running, wasRunning;
   
   @Override
   protected void onCreate(Bundle savedInstanceState)
   {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_stopwatch);
-    if (savedInstanceState != null)
-    {
-      // Get the previous state of the stopwatch
-      // if the activity has been
-      // destroyed and recreated.
-      seconds = savedInstanceState.getInt("seconds");
-      running = savedInstanceState.getBoolean("running");
-      wasRunning = savedInstanceState.getBoolean("wasRunning");
-    }
+
     runTimer();
   }
   @Override
@@ -84,7 +75,6 @@ public class StopwatchActivity extends AppCompatActivity
     final TextView timeView = findViewById(R.id.time_view);
     final Handler handler = new Handler();
     
-
     handler.post(new Runnable()
     {
       @Override

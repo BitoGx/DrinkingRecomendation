@@ -19,11 +19,11 @@ public class SelectUserModel extends MessageModel
   @SerializedName("tanggallahir")
   private String tanggallahir;
   @SerializedName("tinggibadan")
-  private Integer tinggibadan;
+  private String tinggibadan;
   @SerializedName("beratbadan")
-  private Integer beratbadan;
+  private String beratbadan;
   @SerializedName("rekomendasipersonal")
-  private Integer rekomendasipersonal;
+  private String rekomendasipersonal;
   @SerializedName("password")
   private String password;
   @SerializedName("usertoken")
@@ -90,32 +90,32 @@ public class SelectUserModel extends MessageModel
     this.tanggallahir = tanggallahir;
   }
   
-  public Integer getTinggibadan()
+  public String getTinggibadan()
   {
     return tinggibadan;
   }
   
-  public void setTinggibadan(Integer tinggibadan)
+  public void setTinggibadan(String tinggibadan)
   {
     this.tinggibadan = tinggibadan;
   }
   
-  public Integer getBeratbadan()
+  public String getBeratbadan()
   {
     return beratbadan;
   }
   
-  public void setBeratbadan(Integer beratbadan)
+  public void setBeratbadan(String beratbadan)
   {
     this.beratbadan = beratbadan;
   }
   
-  public Integer getRekomendasipersonal()
+  public String getRekomendasipersonal()
   {
     return rekomendasipersonal;
   }
   
-  public void setRekomendasipersonal(Integer rekomendasipersonal)
+  public void setRekomendasipersonal(String rekomendasipersonal)
   {
     this.rekomendasipersonal = rekomendasipersonal;
   }

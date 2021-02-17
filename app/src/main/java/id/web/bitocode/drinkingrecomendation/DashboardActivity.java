@@ -8,6 +8,7 @@ import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
@@ -30,6 +31,7 @@ public class DashboardActivity extends AppCompatActivity implements NavigationVi
   private ProgressDialog progressDialog;
   private NavigationView navigationView;
   private Toolbar toolbar;
+  private TextView tv_nama, tv_ttl, tv_berat, tv_tinggi;
   
   private SessionUtil sessionUtil;
   
@@ -38,13 +40,14 @@ public class DashboardActivity extends AppCompatActivity implements NavigationVi
   {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_dashboard);
-  
+    
+    setUpActionBar();
     inisialisasi();
     hideItem();
     
     actionBarListener();
     
-    loadUserData();
+    loadUserData(this);
   }
   
   @Override
@@ -53,24 +56,31 @@ public class DashboardActivity extends AppCompatActivity implements NavigationVi
     if (drawer.isDrawerOpen(GravityCompat.START))
     {
       drawer.closeDrawer(GravityCompat.START);
-    }
-    else
+    } else
     {
       super.onBackPressed();
     }
   }
   
-  
+  private void setUpActionBar()
+  {
+    toolbar = findViewById(R.id.toolbar);
+    setSupportActionBar(toolbar);
+  }
   
   private void inisialisasi()
   {
     sessionUtil = new SessionUtil(this);
     
     drawer = findViewById(R.id.drawer_dashboard_layout);
+    
     navigationView = findViewById(R.id.nav_dashboard_view);
-    toolbar = findViewById(R.id.toolbar);
-    setSupportActionBar(toolbar);
     navigationView.setNavigationItemSelectedListener(this);
+    
+    tv_nama = findViewById(R.id.tv_dashboard_nama);
+    tv_ttl = findViewById(R.id.tv_dashboard_ttl);
+    tv_berat = findViewById(R.id.tv_dashboard_berat);
+    tv_tinggi = findViewById(R.id.tv_dashboard_tinggi);
   }
   
   private void hideItem()
@@ -93,37 +103,38 @@ public class DashboardActivity extends AppCompatActivity implements NavigationVi
   {
     int id = item.getItemId();
     
-    if(id == R.id.nav_activityrecognition)
+    if (id == R.id.nav_activityrecognition)
     {
       Intent intent = new Intent(this, ActivityRecognitionActivity.class);
       startActivity(intent);
     }
-  
-    if(id == R.id.nav_rekomendasi)
+    
+    if (id == R.id.nav_rekomendasi)
     {
       Intent intent = new Intent(this, StopwatchActivity.class);
       startActivity(intent);
+      finish();
     }
-  
-    if(id == R.id.nav_riwayat)
+    
+    if (id == R.id.nav_riwayat)
     {
       Intent intent = new Intent(this, RiwayatActivity.class);
       startActivity(intent);
     }
-  
-    if(id == R.id.nav_updateprofile)
+    
+    if (id == R.id.nav_updateprofile)
     {
       Intent intent = new Intent(this, UpdateProfilActivity.class);
       startActivity(intent);
     }
-  
-    if(id == R.id.nav_gantipassword)
+    
+    if (id == R.id.nav_gantipassword)
     {
       Intent intent = new Intent(this, GantiPasswordActivity.class);
       startActivity(intent);
     }
-  
-    if(id == R.id.nav_logout)
+    
+    if (id == R.id.nav_logout)
     {
       sessionUtil.logout(DashboardActivity.this);
       Intent intent = new Intent(this, LoginActivity.class);
@@ -133,11 +144,11 @@ public class DashboardActivity extends AppCompatActivity implements NavigationVi
     return true;
   }
   
-  private void loadUserData()
+  private void loadUserData(final Context context)
   {
-    progressDialog = ProgressDialog.show(DashboardActivity.this, "", "Load Data.....", true, false);
+    progressDialog = ProgressDialog.show(context, "", "Load Data.....", true, false);
     
-    String id = sessionUtil.getLoggedUser(DashboardActivity.this).getUserid();
+    String id = sessionUtil.getLoggedUser(context).getUserid();
     
     Call<SelectUserModel> call = APIService.Factory.create().postSelectUser(id);
     call.enqueue(new Callback<SelectUserModel>()
@@ -146,16 +157,27 @@ public class DashboardActivity extends AppCompatActivity implements NavigationVi
       public void onResponse(@NonNull Call<SelectUserModel> call, @NonNull Response<SelectUserModel> response)
       {
         progressDialog.dismiss();
-        TextView tvopen = findViewById(R.id.tv_dashboard_open);
-        assert response.body() != null;
-        tvopen.setText(response.body().getNama());
+        if (response.isSuccessful())
+        {
+          if (response.body() != null)
+          {
+            tv_nama.setText(response.body().getNama());
+            tv_ttl.setText(response.body().getTanggallahir());
+            tv_berat.setText(response.body().getBeratbadan());
+            tv_tinggi.setText(response.body().getTinggibadan());
+          }
+          else
+          {
+            Toast.makeText(context, "Maaf server memberikan response yang salah", Toast.LENGTH_SHORT).show();
+          }
+        }
       }
       
       @Override
       public void onFailure(@NonNull Call<SelectUserModel> call, @NonNull Throwable t)
       {
         progressDialog.dismiss();
-        Toast.makeText(DashboardActivity.this, t.getMessage(), Toast.LENGTH_SHORT).show();
+        Toast.makeText(context, t.getMessage(), Toast.LENGTH_SHORT).show();
       }
     });
   }
