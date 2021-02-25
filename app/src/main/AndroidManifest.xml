@@ -27,9 +27,6 @@
       android:name=".RiwayatActivity"
       android:parentActivityName=".DashboardActivity" />
     <activity
-      android:name=".StopwatchActivity"
-      android:parentActivityName=".DashboardActivity" />
-    <activity
       android:name=".UpdateProfilActivity"
       android:parentActivityName=".DashboardActivity" />
     <activity
@@ -64,7 +61,6 @@
   <uses-permission android:name="android.permission.INTERNET" />
   <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
   <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-  <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
   <uses-permission android:name="android.permission.ACTIVITY_RECOGNITION" />
 
 </manifest>

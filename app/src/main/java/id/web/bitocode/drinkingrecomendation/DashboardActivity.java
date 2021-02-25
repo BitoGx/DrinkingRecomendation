@@ -111,7 +111,7 @@ public class DashboardActivity extends AppCompatActivity implements NavigationVi
     
     if (id == R.id.nav_rekomendasi)
     {
-      Intent intent = new Intent(this, StopwatchActivity.class);
+      Intent intent = new Intent(this, MapsActivity.class);
       startActivity(intent);
     }
     
