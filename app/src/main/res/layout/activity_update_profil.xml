@@ -34,6 +34,7 @@
     android:autofillHints="@string/tanggal_lahir"
     android:cursorVisible="false"
     android:ems="10"
+    android:onClick="onUpdateProfilCalendarClick"
     android:focusable="false"
     android:hint="@string/tanggal_lahir"
     android:inputType="none" />
@@ -97,9 +98,10 @@
 
   <Button
     android:id="@+id/btn_upprofile_update"
+    style="?android:attr/buttonBarButtonStyle"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginTop="30dp"
-    android:text="@string/update"
-    style="?android:attr/buttonBarButtonStyle"/>
+    android:onClick="onUpdateProfilSubmit"
+    android:text="@string/update" />
 </LinearLayout>

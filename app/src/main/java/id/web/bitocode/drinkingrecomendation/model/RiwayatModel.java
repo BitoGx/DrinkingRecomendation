@@ -15,11 +15,11 @@ public class RiwayatModel
   @SerializedName("waktu")
   private String waktu;
   @SerializedName("jarak")
-  private Integer jarak;
+  private String jarak;
   @SerializedName("rekomendasiawal")
-  private Integer rekomendasiawal;
+  private String rekomendasiawal;
   @SerializedName("rekomendasiakhir")
-  private Integer rekomendasiakhir;
+  private String rekomendasiakhir;
   
   public String getRiwayatid()
   {
@@ -61,32 +61,32 @@ public class RiwayatModel
     this.waktu = waktu;
   }
   
-  public Integer getJarak()
+  public String getJarak()
   {
     return jarak;
   }
   
-  public void setJarak(Integer jarak)
+  public void setJarak(String jarak)
   {
     this.jarak = jarak;
   }
   
-  public Integer getRekomendasiawal()
+  public String getRekomendasiawal()
   {
     return rekomendasiawal;
   }
   
-  public void setRekomendasiawal(Integer rekomendasiawal)
+  public void setRekomendasiawal(String rekomendasiawal)
   {
     this.rekomendasiawal = rekomendasiawal;
   }
   
-  public Integer getRekomendasiakhir()
+  public String getRekomendasiakhir()
   {
     return rekomendasiakhir;
   }
   
-  public void setRekomendasiakhir(Integer rekomendasiakhir)
+  public void setRekomendasiakhir(String rekomendasiakhir)
   {
     this.rekomendasiakhir = rekomendasiakhir;
   }

@@ -38,7 +38,7 @@ public interface APIService
   
   @FormUrlEncoded
   @POST("API/lupaPassword.php")
-  Call<UserModel.UserDataModel> postLupaPassword(@Field("email") String email);
+  Call<MessageModel> postLupaPassword(@Field("email") String email);
   
   @FormUrlEncoded
   @POST("API/updatePassword.php")
@@ -64,7 +64,8 @@ public interface APIService
   
   @FormUrlEncoded
   @POST("API/selectRiwayat.php")
-  Call<SelectRiwayatModel> postSelectRiwayat(@Field("id") String id);
+  Call<SelectRiwayatModel> postSelectRiwayat(@Field("id") String id,
+                                             @Field("type") String type);
   
   
   

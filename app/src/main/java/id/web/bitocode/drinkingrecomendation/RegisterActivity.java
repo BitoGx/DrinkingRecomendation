@@ -37,7 +37,7 @@ public class RegisterActivity extends AppCompatActivity
   private DatePickerDialog.OnDateSetListener onDateSetListener;
   private RadioGroup rgjeniskelamin;
   private RadioButton rbjeniskelamin;
-  private Button btnregister,btnback;
+  private Button btnregister;
   private ProgressDialog progressDialog;
   
   @Override
@@ -47,9 +47,6 @@ public class RegisterActivity extends AppCompatActivity
     setContentView(R.layout.activity_register);
   
     inisialisasi();
-    editCalendar(this);
-    btnRegisterListener(this);
-    btnBackListener(this);
   }
   
   private void inisialisasi()
@@ -67,24 +64,19 @@ public class RegisterActivity extends AppCompatActivity
     etberat      = findViewById(R.id.et_reg_berat);
     
     rgjeniskelamin = findViewById(R.id.rg_reg_jeniskelamin);
-    
-    btnback     = findViewById(R.id.btn_reg_back);
+
     btnregister = findViewById(R.id.btn_reg_register);
   }
-  
-  private void editCalendar(final Context context)
+
+
+
+  public void onRegisterCalendarClick(View view)
   {
-    etttl.setOnClickListener(new View.OnClickListener()
-    {
-      @Override
-      public void onClick(View v)
-      {
-        new DatePickerDialog(context, onDateSetListener,
-                selectedCalendar.get(Calendar.YEAR),
-                selectedCalendar.get(Calendar.MONTH),
-                selectedCalendar.get(Calendar.DAY_OF_MONTH)).show();
-      }
-    });
+    new DatePickerDialog(this, onDateSetListener,
+                         selectedCalendar.get(Calendar.YEAR),
+                         selectedCalendar.get(Calendar.MONTH),
+                         selectedCalendar.get(Calendar.DAY_OF_MONTH)).show();
+
     setDateListener();
   }
   
@@ -138,33 +130,26 @@ public class RegisterActivity extends AppCompatActivity
             || TextUtils.isEmpty(etberat.getText().toString())
             || TextUtils.isEmpty(rbjeniskelamin.getText().toString());
   }
-  
-  private void btnRegisterListener(final Context context)
+
+  public void onRegisterClick(View view)
   {
-    btnregister.setOnClickListener(new View.OnClickListener()
+    if(validateData())
     {
-      @Override
-      public void onClick(View v)
+      Toast.makeText(this, "Maaf semua field wajib diisi",Toast.LENGTH_SHORT).show();
+    }
+    else
+    {
+      if(!validatePassword())
       {
-        if(validateData())
-        {
-          Toast.makeText(context, "Maaf semua field wajib diisi",Toast.LENGTH_SHORT).show();
-        }
-        else
-        {
-          if(!validatePassword())
-          {
-            Toast.makeText(context, "Maaf password pertama dan kedua tidak sama",Toast.LENGTH_SHORT).show();
-            etfirstpass.requestFocus();
-          }
-          else
-          {
-            progressDialog = ProgressDialog.show(context, "", "Menyimpan.....", true, false);
-            saveUserData(context);
-          }
-        }
+        Toast.makeText(this, "Maaf password pertama dan kedua tidak sama",Toast.LENGTH_SHORT).show();
+        etfirstpass.requestFocus();
       }
-    });
+      else
+      {
+        progressDialog = ProgressDialog.show(this, "", "Menyimpan.....", true, false);
+        saveUserData(this);
+      }
+    }
   }
   
   private boolean validatePassword()
@@ -230,18 +215,11 @@ public class RegisterActivity extends AppCompatActivity
       }
     });
   }
-  
-  private void btnBackListener(final Context context)
+
+  public void onRegisterBackClick(View view)
   {
-    btnback.setOnClickListener(new View.OnClickListener()
-    {
-      @Override
-      public void onClick(View v)
-      {
-        Intent intent = new Intent(context, LoginActivity.class);
-        startActivity(intent);
-        finish();
-      }
-    });
+    Intent intent = new Intent(this, LoginActivity.class);
+    startActivity(intent);
+    finish();
   }
 }

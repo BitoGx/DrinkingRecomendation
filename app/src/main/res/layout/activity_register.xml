@@ -75,6 +75,7 @@
         android:autofillHints="@string/tanggal_lahir"
         android:cursorVisible="false"
         android:ems="10"
+        android:onClick="onRegisterCalendarClick"
         android:focusable="false"
         android:hint="@string/tanggal_lahir"
         android:inputType="none" />
@@ -138,6 +139,7 @@
           android:layout_height="wrap_content"
           android:layout_marginTop="20dp"
           android:layout_weight="1"
+          android:onClick="onRegisterBackClick"
           android:text="@string/back" />
 
         <Button
@@ -147,6 +149,7 @@
           android:layout_height="wrap_content"
           android:layout_marginTop="20dp"
           android:layout_weight="1"
+          android:onClick="onRegisterClick"
           android:text="@string/register" />
       </LinearLayout>
 

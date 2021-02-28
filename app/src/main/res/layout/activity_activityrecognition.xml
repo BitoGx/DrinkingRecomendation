@@ -7,63 +7,96 @@
   android:layout_height="match_parent"
   android:layout_marginHorizontal="@dimen/activity_horizontal_margin"
   android:layout_marginVertical="@dimen/activity_vertical_margin"
+  android:orientation="vertical"
   tools:context=".ActivityRecognitionActivity"
   tools:openDrawer="start">
 
-    <LinearLayout
-      android:layout_width="match_parent"
-      android:layout_height="match_parent"
-      android:orientation="vertical">
+  <ImageView
+    android:id="@+id/img_activityrecog_activity"
+    android:layout_width="match_parent"
+    android:layout_height="200dp"
+    android:contentDescription="@string/activity_image"
+    android:src="@drawable/ic_still" />
 
-      <ImageView
-        android:id="@+id/img_activityrecog_activity"
-        android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:src="@drawable/ic_still" />
+  <TextView
+    android:id="@+id/tv_activityrecog_activity"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center_horizontal"
+    android:textAllCaps="true"
+    android:textColor="@color/colorPrimary"
+    android:textSize="18sp"
+    android:textStyle="bold" />
 
-      <TextView
-        android:id="@+id/tv_activityrecog_activity"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:textAllCaps="true"
-        android:textColor="@color/colorPrimary"
-        android:textSize="18dp"
-        android:textStyle="bold" />
+  <TextView
+    android:id="@+id/tv_activityrecog_confidence"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center_horizontal"
+    android:layout_marginTop="10dp"
+    android:textAllCaps="true"
+    android:textSize="14sp" />
 
-      <TextView
-        android:id="@+id/tv_activityrecog_confidence"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="10dp"
-        android:textAllCaps="true"
-        android:textSize="14dp" />
+  <TextView
+    android:id="@+id/tv_activityrecog_time_view"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center_horizontal"
+    android:textSize="56sp" />
 
-        <TextView
-            android:id="@+id/tv_activityrecog_time_view"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:textSize="56sp" />
+  <Button
+    android:id="@+id/btn_activityrecog_start"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center_horizontal"
+    android:layout_marginTop="20dp"
+    android:onClick="onStartClick"
+    android:text="@string/start" />
 
-        <Button
-            android:id="@+id/btn_activityrecog_start"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="20dp"
-            android:onClick="onStartClick"
-            android:text="@string/start" />
+  <TextView
+    android:id="@+id/btn_activityrecog_reset"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center_horizontal"
+    android:layout_marginTop="8dp"
+    android:onClick="onResetClick"
+    android:text="@string/reset" />
 
-        <TextView
-            android:id="@+id/btn_activityrecog_reset"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="8dp"
-            android:onClick="onResetClick"
-            android:text="@string/reset" />
+  <LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal">
 
-    </LinearLayout>
+    <TextView
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_weight="1"
+      android:text="@string/walking_time" />
+
+    <TextView
+      android:id="@+id/tv_activityrecog_walking_time"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_weight="1"
+      android:text="AAAAAAAAA"/>
+  </LinearLayout>
+
+  <LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal">
+
+    <TextView
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_weight="1"
+      android:text="@string/running_time" />
+
+    <TextView
+      android:id="@+id/tv_activityrecog_running_time"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_weight="1" />
+  </LinearLayout>
+
 </LinearLayout>

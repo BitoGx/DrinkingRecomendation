@@ -40,7 +40,7 @@ public class RiwayatActivity extends AppCompatActivity
     
     setUpActionBar();
     inisialisasi();
-    initRecyclerView();
+    //initRecyclerView();
     //loadRiwayatUser();
     
   }
@@ -57,7 +57,7 @@ public class RiwayatActivity extends AppCompatActivity
   {
     rv_riwayat = findViewById(R.id.rv_riwayat);
   }
-  
+  /*
   private void initRecyclerView()
   {
     riwayatRecyclerViewAdapter = new RiwayatRecyclerViewAdapter(riwayatModels);
@@ -66,7 +66,7 @@ public class RiwayatActivity extends AppCompatActivity
     rv_riwayat.setItemAnimator(new DefaultItemAnimator());
     rv_riwayat.setAdapter(riwayatRecyclerViewAdapter);
   }
-  /*
+
   private void loadRiwayatUser()
   {
     progressDialog = ProgressDialog.show(RiwayatActivity.this, "", "Load Data.....", true, false);

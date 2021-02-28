@@ -55,8 +55,6 @@ public class UpdateProfilActivity extends AppCompatActivity
     setUpActionBar();
     inisialisasi();
     showUserData();
-    editCalendar(this);
-    btnUpdateListener(this);
   }
   
   private void setUpActionBar()
@@ -106,20 +104,14 @@ public class UpdateProfilActivity extends AppCompatActivity
       rbwanita.setChecked(true);
     }
   }
-  
-  private void editCalendar(final Context context)
+
+  public void onUpdateProfilCalendarClick(View view)
   {
-    etttl.setOnClickListener(new View.OnClickListener()
-    {
-      @Override
-      public void onClick(View v)
-      {
-        new DatePickerDialog(context, onDateSetListener,
-                selectedCalendar.get(Calendar.YEAR),
-                selectedCalendar.get(Calendar.MONTH),
-                selectedCalendar.get(Calendar.DAY_OF_MONTH)).show();
-      }
-    });
+    new DatePickerDialog(this, onDateSetListener,
+                         selectedCalendar.get(Calendar.YEAR),
+                         selectedCalendar.get(Calendar.MONTH),
+                         selectedCalendar.get(Calendar.DAY_OF_MONTH)).show();
+
     setDateListener();
   }
   
@@ -171,32 +163,25 @@ public class UpdateProfilActivity extends AppCompatActivity
             || TextUtils.isEmpty(etberat.getText().toString())
             || TextUtils.isEmpty(rbjeniskelamin.getText().toString());
   }
-  
-  private void btnUpdateListener(final Context context)
+
+  public void onUpdateProfilSubmit(View view)
   {
-    btnupdate.setOnClickListener(new View.OnClickListener()
+    if(validateData())
     {
-      @Override
-      public void onClick(View v)
+      Toast.makeText(this, "Maaf semua field wajib diisi",Toast.LENGTH_SHORT).show();
+    }
+    else
+    {
+      if(checkEmail(etemail.getText().toString()))
       {
-        if(validateData())
-        {
-          Toast.makeText(context, "Maaf semua field wajib diisi",Toast.LENGTH_SHORT).show();
-        }
-        else
-        {
-          if(checkEmail(etemail.getText().toString()))
-          {
-            setUpConfirmationDialog(context);
-          }
-          else
-          {
-            progressDialog = ProgressDialog.show(context, "", "Updating.....", true, false);
-            updateProfil(context);
-          }
-        }
+        setUpConfirmationDialog(this);
       }
-    });
+      else
+      {
+        progressDialog = ProgressDialog.show(this, "", "Updating.....", true, false);
+        updateProfil(this);
+      }
+    }
   }
   
   private boolean checkEmail(String email)
@@ -291,4 +276,6 @@ public class UpdateProfilActivity extends AppCompatActivity
       }
     });
   }
+
+
 }

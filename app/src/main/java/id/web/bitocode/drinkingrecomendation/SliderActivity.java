@@ -33,10 +33,7 @@ public class SliderActivity extends AppCompatActivity
     setContentView(R.layout.activity_slider);
     
     checkFirstTimeLaunch();
-    
     inisialisasi();
-    btnNextlistener(this);
-    btnSkiplistener(this);
   }
   
   private void launchLoginActivity(Context context)
@@ -131,36 +128,23 @@ public class SliderActivity extends AppCompatActivity
       }
     };
   }
-  
-  private void btnNextlistener(final Context context)
+
+  public void onNextClick(View view)
   {
-    btnNext.setOnClickListener(new View.OnClickListener()
+    int current = getItem();
+    if (current < SliderModel.values().length)
     {
-      @Override
-      public void onClick(View v)
-      {
-        int current = getItem();
-        if (current < SliderModel.values().length)
-        {
-          viewPager.setCurrentItem(current);
-        }
-        else
-        {
-          launchLoginActivity(context);
-        }
-      }
-    });
+      viewPager.setCurrentItem(current);
+    }
+    else
+    {
+      launchLoginActivity(this);
+    }
   }
-  
-  private void btnSkiplistener(final Context context)
+
+
+  public void onSkipClick(View view)
   {
-    btnSkip.setOnClickListener(new View.OnClickListener()
-    {
-      @Override
-      public void onClick(View v)
-      {
-        launchLoginActivity(context);
-      }
-    });
+    launchLoginActivity(this);
   }
 }

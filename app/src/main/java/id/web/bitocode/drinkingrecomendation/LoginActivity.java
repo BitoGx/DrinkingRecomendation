@@ -11,7 +11,6 @@ import android.text.SpannableString;
 import android.text.TextUtils;
 import android.text.style.UnderlineSpan;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -26,8 +25,6 @@ import retrofit2.Response;
 public class LoginActivity extends AppCompatActivity
 {
   private EditText etusername, etpassword;
-  private TextView tvlupapassword;
-  private Button btnregister, btnLogin;
   private ProgressDialog progressDialog;
   private SessionUtil sessionUtil;
 
@@ -38,30 +35,24 @@ public class LoginActivity extends AppCompatActivity
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_login);
 
-    inisialisasi(this);
-    checkSession(this);
-    btnRegisterListener(this);
-    tvLupaPasswordListener(this);
-    btnLoginListener(this);
-
+    inisialisasi();
   }
 
-  private void inisialisasi(Context context)
+  private void inisialisasi()
   {
+
     String udata = "Lupa password klik disini";
     SpannableString content = new SpannableString(udata);
     content.setSpan(new UnderlineSpan(), 19, udata.length(), 0);
 
-    sessionUtil = new SessionUtil(context);
+    TextView tvlupapassword = findViewById(R.id.tv_log_lupapassword);
+    tvlupapassword.setText(content);
+
+    sessionUtil = new SessionUtil(this);
+    checkSession(this);
 
     etusername = findViewById(R.id.et_log_username);
     etpassword = findViewById(R.id.et_log_password);
-
-    tvlupapassword = findViewById(R.id.tv_log_lupapassword);
-    tvlupapassword.setText(content);
-
-    btnLogin = findViewById(R.id.btn_log_login);
-    btnregister = findViewById(R.id.btn_log_registrasi);
   }
 
   private void checkSession(Context context)
@@ -80,23 +71,17 @@ public class LoginActivity extends AppCompatActivity
             || TextUtils.isEmpty(etpassword.getText().toString());
   }
 
-  private void btnLoginListener(final Context context)
+  public void onLoginClick(View view)
   {
-    btnLogin.setOnClickListener(new View.OnClickListener()
+    if (!validateData())
     {
-      @Override
-      public void onClick(View v)
-      {
-        if (!validateData())
-        {
-          progressDialog = ProgressDialog.show(context, "", "Logging in...", true, false);
-          userLogin(context);
-        } else
-        {
-          Toast.makeText(context, "Maaf semua field wajib diisi", Toast.LENGTH_SHORT).show();
-        }
-      }
-    });
+      progressDialog = ProgressDialog.show(this, "", "Logging in...", true, false);
+      userLogin(this);
+    }
+    else
+    {
+      Toast.makeText(this, "Maaf semua field wajib diisi", Toast.LENGTH_SHORT).show();
+    }
   }
 
   private void userLogin(final Context context)
@@ -125,11 +110,13 @@ public class LoginActivity extends AppCompatActivity
                 startActivity(intent);
                 finish();
               }
-            } else
+            }
+            else
             {
               Toast.makeText(context, response.body().getMessage(), Toast.LENGTH_SHORT).show();
             }
-          } else
+          }
+          else
           {
             Toast.makeText(context, "Maaf server memberikan response yang salah", Toast.LENGTH_SHORT).show();
           }
@@ -145,31 +132,18 @@ public class LoginActivity extends AppCompatActivity
     });
   }
 
-  private void btnRegisterListener(final Context context)
+
+  public void onCreateNewAccountClick(View view)
   {
-    btnregister.setOnClickListener(new View.OnClickListener()
-    {
-      @Override
-      public void onClick(View v)
-      {
-        Intent intent = new Intent(context, RegisterActivity.class);
-        startActivity(intent);
-        finish();
-      }
-    });
+    Intent intent = new Intent(this, RegisterActivity.class);
+    startActivity(intent);
+    finish();
   }
 
-  private void tvLupaPasswordListener(final Context context)
+  public void onLupaPasswordClick(View view)
   {
-    tvlupapassword.setOnClickListener(new View.OnClickListener()
-    {
-      @Override
-      public void onClick(View v)
-      {
-        Intent intent = new Intent(context, LupaPasswordActivity.class);
-        startActivity(intent);
-        finish();
-      }
-    });
+    Intent intent = new Intent(this, LupaPasswordActivity.class);
+    startActivity(intent);
+    finish();
   }
 }

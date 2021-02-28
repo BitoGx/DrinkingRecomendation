@@ -24,7 +24,6 @@ import retrofit2.Response;
 public class GantiPasswordActivity extends AppCompatActivity
 {
   private EditText etoldpass,etnewfirstpass,etnewsecondpass;
-  private Button btnupdate;
   private ProgressDialog progressDialog;
   private SessionUtil sessionUtil;
   
@@ -36,8 +35,6 @@ public class GantiPasswordActivity extends AppCompatActivity
   
     setUpActionBar();
     inisialisasi();
-    
-    btnUpdateListener(this);
   }
   
   private void setUpActionBar()
@@ -55,8 +52,6 @@ public class GantiPasswordActivity extends AppCompatActivity
     etoldpass       = findViewById(R.id.et_gantipass_oldpass);
     etnewfirstpass  = findViewById(R.id.et_gantipass_firstnewpass);
     etnewsecondpass = findViewById(R.id.et_gantipass_secondnewpass);
-    
-    btnupdate = findViewById(R.id.btn_gantipass_update);
   }
   
   private boolean validateData()
@@ -70,35 +65,28 @@ public class GantiPasswordActivity extends AppCompatActivity
   {
     return etnewfirstpass.getText().toString().equals(etnewsecondpass.getText().toString());
   }
-  
-  private void btnUpdateListener(final Context context)
+
+  public void onGantiPasswordUpdateClick (View view)
   {
-    btnupdate.setOnClickListener(new View.OnClickListener()
+    if(validateData())
     {
-      @Override
-      public void onClick(View v)
+      Toast.makeText(this, "Maaf semua field wajib diisi",Toast.LENGTH_SHORT).show();
+    }
+    else
+    {
+      if(!validatePassword())
       {
-        if(validateData())
-        {
-          Toast.makeText(context, "Maaf semua field wajib diisi",Toast.LENGTH_SHORT).show();
-        }
-        else
-        {
-          if(!validatePassword())
-          {
-            Toast.makeText(context, "Maaf password pertama dan kedua tidak sama",Toast.LENGTH_SHORT).show();
-            etnewfirstpass.requestFocus();
-          }
-          else
-          {
-            progressDialog = ProgressDialog.show(context, "", "Updating...", true, false);
-            updatePassword(context);
-          }
-        }
+        Toast.makeText(this, "Maaf password pertama dan kedua tidak sama",Toast.LENGTH_SHORT).show();
+        etnewfirstpass.requestFocus();
       }
-    });
+      else
+      {
+        progressDialog = ProgressDialog.show(this, "", "Updating...", true, false);
+        updatePassword(this);
+      }
+    }
   }
-  
+
   private void updatePassword(final Context context)
   {
     String id      = sessionUtil.getLoggedUser(context).getUserid();

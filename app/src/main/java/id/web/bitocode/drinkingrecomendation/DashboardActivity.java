@@ -18,6 +18,9 @@ import android.widget.Toast;
 
 import com.google.android.material.navigation.NavigationView;
 
+import java.util.Locale;
+
+import id.web.bitocode.drinkingrecomendation.model.SelectRiwayatModel;
 import id.web.bitocode.drinkingrecomendation.model.SelectUserModel;
 import id.web.bitocode.drinkingrecomendation.network.APIService;
 import id.web.bitocode.drinkingrecomendation.util.SessionUtil;
@@ -31,108 +34,118 @@ public class DashboardActivity extends AppCompatActivity implements NavigationVi
   private ProgressDialog progressDialog;
   private NavigationView navigationView;
   private Toolbar toolbar;
-  private TextView tv_nama, tv_ttl, tv_berat, tv_tinggi;
-  
+  private TextView tv_nama, tv_ttl, tv_berat, tv_tinggi,tv_jenisaktivitas,tv_tanggalaktivitas,tv_jarak,tv_waktu,tv_rekomendasiawal,tv_rekomendasiakhir;
+  private String userid;
+
   private SessionUtil sessionUtil;
-  
+
   @Override
   protected void onCreate(Bundle savedInstanceState)
   {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_dashboard);
-    
+
     setUpActionBar();
     inisialisasi();
     hideItem();
-    
+
     actionBarListener();
-    
-    loadUserData(this);
+
+    loadAllData(this);
   }
-  
+
   @Override
   public void onBackPressed()
   {
     if (drawer.isDrawerOpen(GravityCompat.START))
     {
       drawer.closeDrawer(GravityCompat.START);
-    } else
+    }
+    else
     {
       super.onBackPressed();
     }
   }
-  
+
   private void setUpActionBar()
   {
     toolbar = findViewById(R.id.toolbar);
     setSupportActionBar(toolbar);
   }
-  
+
   private void inisialisasi()
   {
     sessionUtil = new SessionUtil(this);
-    
+    userid = sessionUtil.getLoggedUser(this).getUserid();
+
+
     drawer = findViewById(R.id.drawer_dashboard_layout);
-    
+
     navigationView = findViewById(R.id.nav_dashboard_view);
     navigationView.setNavigationItemSelectedListener(this);
-    
-    tv_nama = findViewById(R.id.tv_dashboard_nama);
-    tv_ttl = findViewById(R.id.tv_dashboard_ttl);
-    tv_berat = findViewById(R.id.tv_dashboard_berat);
-    tv_tinggi = findViewById(R.id.tv_dashboard_tinggi);
+
+    tv_nama             = findViewById(R.id.tv_dashboard_nama);
+    tv_ttl              = findViewById(R.id.tv_dashboard_ttl);
+    tv_berat            = findViewById(R.id.tv_dashboard_berat);
+    tv_tinggi           = findViewById(R.id.tv_dashboard_tinggi);
+    tv_jenisaktivitas   = findViewById(R.id.tv_dashboard_jenisaktifitas);
+    tv_tanggalaktivitas = findViewById(R.id.tv_dashboard_tanggalaktivitas);
+    tv_jarak            = findViewById(R.id.tv_dashboard_jarak);
+    tv_waktu            = findViewById(R.id.tv_dashboard_waktu);
+    tv_rekomendasiawal  = findViewById(R.id.tv_dashboard_rec_awal);
+    tv_rekomendasiakhir = findViewById(R.id.tv_dashboard_rec_akhir);
   }
-  
+
   private void hideItem()
   {
     Menu nav_Menu = navigationView.getMenu();
     nav_Menu.findItem(R.id.nav_dashboard).setVisible(false);
   }
-  
+
   private void actionBarListener()
   {
     ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar,
-            R.string.navigation_drawer_open,
-            R.string.navigation_drawer_close);
+                                                             R.string.navigation_drawer_open,
+                                                             R.string.navigation_drawer_close);
     drawer.addDrawerListener(toggle);
     toggle.syncState();
   }
-  
+
   @Override
   public boolean onNavigationItemSelected(@NonNull MenuItem item)
   {
     int id = item.getItemId();
-    
+
     if (id == R.id.nav_activityrecognition)
     {
       Intent intent = new Intent(this, ActivityRecognitionActivity.class);
       startActivity(intent);
     }
-    
+
     if (id == R.id.nav_rekomendasi)
     {
       Intent intent = new Intent(this, MapsActivity.class);
       startActivity(intent);
     }
-    
+
     if (id == R.id.nav_riwayat)
     {
       Intent intent = new Intent(this, RiwayatActivity.class);
       startActivity(intent);
     }
-    
+
     if (id == R.id.nav_updateprofile)
     {
       Intent intent = new Intent(this, UpdateProfilActivity.class);
       startActivity(intent);
     }
-    
+
     if (id == R.id.nav_gantipassword)
     {
       Intent intent = new Intent(this, GantiPasswordActivity.class);
       startActivity(intent);
     }
-    
+
     if (id == R.id.nav_logout)
     {
       sessionUtil.logout(DashboardActivity.this);
@@ -142,20 +155,17 @@ public class DashboardActivity extends AppCompatActivity implements NavigationVi
     }
     return true;
   }
-  
+
   private void loadUserData(final Context context)
   {
     progressDialog = ProgressDialog.show(context, "", "Load Data.....", true, false);
-    
-    String id = sessionUtil.getLoggedUser(context).getUserid();
-    
-    Call<SelectUserModel> call = APIService.Factory.create().postSelectUser(id);
+
+    Call<SelectUserModel> call = APIService.Factory.create().postSelectUser(userid);
     call.enqueue(new Callback<SelectUserModel>()
     {
       @Override
       public void onResponse(@NonNull Call<SelectUserModel> call, @NonNull Response<SelectUserModel> response)
       {
-        progressDialog.dismiss();
         if (response.isSuccessful())
         {
           if (response.body() != null)
@@ -171,7 +181,7 @@ public class DashboardActivity extends AppCompatActivity implements NavigationVi
           }
         }
       }
-      
+
       @Override
       public void onFailure(@NonNull Call<SelectUserModel> call, @NonNull Throwable t)
       {
@@ -179,5 +189,54 @@ public class DashboardActivity extends AppCompatActivity implements NavigationVi
         Toast.makeText(context, t.getMessage(), Toast.LENGTH_SHORT).show();
       }
     });
+  }
+
+  private void loadRiwayatData(final Context context)
+  {
+    String type = "Dashboard";
+    Call<SelectRiwayatModel> call = APIService.Factory.create().postSelectRiwayat(userid, type);
+    call.enqueue(new Callback<SelectRiwayatModel>()
+    {
+      @Override
+      public void onResponse(@NonNull Call<SelectRiwayatModel> call,@NonNull Response<SelectRiwayatModel> response)
+      {
+        progressDialog.dismiss();
+        if (response.isSuccessful())
+        {
+          if (response.body() != null)
+          {
+            tv_jenisaktivitas.setText(response.body().getJenisaktivitas());
+            tv_tanggalaktivitas.setText(response.body().getTanggalaktivitas());
+            tv_jarak.setText(response.body().getJarak());
+            int totalHours = Integer.parseInt(response.body().getWaktu()) / 3600;
+            int totalMinutes = (Integer.parseInt(response.body().getWaktu()) % 3600) / 60;
+            int totalSecs = Integer.parseInt(response.body().getWaktu()) % 60;
+            String waktu = String.format(Locale.getDefault(),
+                                             " %d Jam %02d Menit %02d Detik", totalHours,
+                                             totalMinutes, totalSecs);
+            tv_waktu.setText(waktu);
+            tv_rekomendasiawal.setText(response.body().getRekomendasiawal());
+            tv_rekomendasiakhir.setText(response.body().getRekomendasiakhir());
+          }
+          else
+          {
+            Toast.makeText(context, "Maaf server memberikan response yang salah", Toast.LENGTH_SHORT).show();
+          }
+        }
+      }
+
+      @Override
+      public void onFailure(@NonNull Call<SelectRiwayatModel> call,@NonNull Throwable t)
+      {
+        progressDialog.dismiss();
+        Toast.makeText(context, t.getMessage(), Toast.LENGTH_SHORT).show();
+      }
+    });
+  }
+
+  private void loadAllData(Context context)
+  {
+    loadUserData(context);
+    loadRiwayatData(context);
   }
 }
