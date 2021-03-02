@@ -4,6 +4,7 @@ import java.util.concurrent.TimeUnit;
 
 import id.web.bitocode.drinkingrecomendation.config.Constants;
 import id.web.bitocode.drinkingrecomendation.model.MessageModel;
+import id.web.bitocode.drinkingrecomendation.model.RiwayatModel;
 import id.web.bitocode.drinkingrecomendation.model.SelectRiwayatModel;
 import id.web.bitocode.drinkingrecomendation.model.SelectUserModel;
 import id.web.bitocode.drinkingrecomendation.model.UserModel;
@@ -30,6 +31,7 @@ public interface APIService
                                  @Part("tinggi") RequestBody tinggi,
                                  @Part("berat") RequestBody berat,
                                  @Part("jeniskelamin") RequestBody jeniskelamin);
+
   
   @FormUrlEncoded
   @POST("API/login.php")
@@ -66,7 +68,11 @@ public interface APIService
   @POST("API/selectRiwayat.php")
   Call<SelectRiwayatModel> postSelectRiwayat(@Field("id") String id,
                                              @Field("type") String type);
-  
+
+  @FormUrlEncoded
+  @POST("API/selectRiwayat.php")
+  Call<RiwayatModel.RiwayatDataModel> postGetRiwayat(@Field("id") String id,
+                                                     @Field("type") String type);
   
   
   class Factory

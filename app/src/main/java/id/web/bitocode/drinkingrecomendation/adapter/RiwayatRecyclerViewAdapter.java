@@ -1,5 +1,6 @@
 package id.web.bitocode.drinkingrecomendation.adapter;
 
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,10 +16,12 @@ import id.web.bitocode.drinkingrecomendation.model.RiwayatModel;
 
 public class RiwayatRecyclerViewAdapter extends RecyclerView.Adapter<RiwayatRecyclerViewAdapter.ViewHolder>
 {
-  private final List<RiwayatModel> riwayatModelList;
-  
-  public RiwayatRecyclerViewAdapter(List<RiwayatModel> riwayatModelList)
+  private Context context;
+  private List<RiwayatModel> riwayatModelList;
+
+  public RiwayatRecyclerViewAdapter(Context context, List<RiwayatModel> riwayatModelList)
   {
+    this.context = context;
     this.riwayatModelList = riwayatModelList;
   }
   
@@ -26,7 +29,7 @@ public class RiwayatRecyclerViewAdapter extends RecyclerView.Adapter<RiwayatRecy
   @Override
   public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType)
   {
-    View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_riwayat,null);
+    View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_riwayat,parent,false);
     return new ViewHolder(view);
   }
   
@@ -35,6 +38,7 @@ public class RiwayatRecyclerViewAdapter extends RecyclerView.Adapter<RiwayatRecy
   {
     RiwayatModel model = riwayatModelList.get(position);
     holder.tv_tanggal.setText(model.getTanggalaktivitas());
+    holder.tv_jenis.setText(model.getJenisaktivitas());
     holder.tv_jarak.setText(model.getJarak());
     holder.tv_waktu.setText(model.getWaktu());
     holder.tv_rec_awal.setText(model.getRekomendasiawal());
@@ -49,12 +53,13 @@ public class RiwayatRecyclerViewAdapter extends RecyclerView.Adapter<RiwayatRecy
   
   public static class ViewHolder extends RecyclerView.ViewHolder
   {
-    private final TextView tv_tanggal,tv_jarak,tv_waktu,tv_rec_awal,tv_rec_akhir;
+    private final TextView tv_tanggal,tv_jenis,tv_jarak,tv_waktu,tv_rec_awal,tv_rec_akhir;
     
     public ViewHolder(View view)
     {
       super(view);
       tv_tanggal   = view.findViewById(R.id.tv_item_riwayat_gettanggal);
+      tv_jenis     = view.findViewById(R.id.tv_item_riwayat_getjenisaktivitas);
       tv_jarak     = view.findViewById(R.id.tv_item_riwayat_getjarak);
       tv_waktu     = view.findViewById(R.id.tv_item_riwayat_getwaktu);
       tv_rec_awal  = view.findViewById(R.id.tv_item_riwayat_getrekomendasiawal);
@@ -62,9 +67,9 @@ public class RiwayatRecyclerViewAdapter extends RecyclerView.Adapter<RiwayatRecy
     }
   }
   
-  protected void publishData(List<RiwayatModel> riwayatModelList)
+  public void publishData(List<RiwayatModel> riwayatModels)
   {
-    riwayatModelList = riwayatModelList;
+    riwayatModelList = riwayatModels;
     notifyDataSetChanged();
   }
 }

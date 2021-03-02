@@ -9,10 +9,13 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.ProgressDialog;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import id.web.bitocode.drinkingrecomendation.adapter.RiwayatRecyclerViewAdapter;
 import id.web.bitocode.drinkingrecomendation.model.RiwayatModel;
@@ -26,6 +29,7 @@ import retrofit2.Response;
 public class RiwayatActivity extends AppCompatActivity
 {
   private SessionUtil sessionUtil;
+  private String userid;
   private RecyclerView rv_riwayat;
   private List<RiwayatModel> riwayatModels;
   private ProgressDialog progressDialog;
@@ -40,8 +44,8 @@ public class RiwayatActivity extends AppCompatActivity
     
     setUpActionBar();
     inisialisasi();
-    //initRecyclerView();
-    //loadRiwayatUser();
+    initRecyclerView();
+    loadRiwayatUser();
     
   }
   
@@ -55,12 +59,15 @@ public class RiwayatActivity extends AppCompatActivity
   
   private void inisialisasi()
   {
+    sessionUtil = new SessionUtil(this);
+    userid = sessionUtil.getLoggedUser(this).getUserid();
+
     rv_riwayat = findViewById(R.id.rv_riwayat);
   }
-  /*
+
   private void initRecyclerView()
   {
-    riwayatRecyclerViewAdapter = new RiwayatRecyclerViewAdapter(riwayatModels);
+    riwayatRecyclerViewAdapter = new RiwayatRecyclerViewAdapter(this, new ArrayList<RiwayatModel>());
     RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(RiwayatActivity.this);
     rv_riwayat.setLayoutManager(layoutManager);
     rv_riwayat.setItemAnimator(new DefaultItemAnimator());
@@ -70,28 +77,34 @@ public class RiwayatActivity extends AppCompatActivity
   private void loadRiwayatUser()
   {
     progressDialog = ProgressDialog.show(RiwayatActivity.this, "", "Load Data.....", true, false);
-    
-    String id = sessionUtil.getLoggedUser(RiwayatActivity.this).getUserid();
-    
-    Call<SelectUserModel> call = APIService.Factory.create().postSelectUser(id);
-    call.enqueue(new Callback<SelectUserModel>()
+    String type = "Riwayat";
+
+    Call<RiwayatModel.RiwayatDataModel> call = APIService.Factory.create().postGetRiwayat(userid, type);
+    call.enqueue(new Callback<RiwayatModel.RiwayatDataModel>()
     {
       @Override
-      public void onResponse(@NonNull Call<SelectUserModel> call, @NonNull Response<SelectUserModel> response)
+      public void onResponse(@NonNull Call<RiwayatModel.RiwayatDataModel> call, @NonNull Response<RiwayatModel.RiwayatDataModel> response)
       {
         progressDialog.dismiss();
-        TextView tvopen = findViewById(R.id.tv_dashboard_open);
-        assert response.body() != null;
-        String msg = response.body().getNama();
-        tvopen.setText(response.body().getNama());
+        if (response.isSuccessful())
+        {
+          if (response.body() != null)
+          {
+            riwayatRecyclerViewAdapter.publishData(response.body().getResults());
+          }
+          else
+          {
+            Toast.makeText(RiwayatActivity.this, "Maaf server memberikan response yang salah", Toast.LENGTH_SHORT).show();
+          }
+        }
       }
       
       @Override
-      public void onFailure(@NonNull Call<SelectUserModel> call, @NonNull Throwable t)
+      public void onFailure(@NonNull Call<RiwayatModel.RiwayatDataModel> call, @NonNull Throwable t)
       {
         progressDialog.dismiss();
         Toast.makeText(RiwayatActivity.this, t.getMessage(), Toast.LENGTH_SHORT).show();
       }
     });
-  }*/
+  }
 }

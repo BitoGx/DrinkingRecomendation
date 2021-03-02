@@ -92,4 +92,6 @@
   <string name="walking_time">Walking Time :</string>
   <string name="running_time">Running Time :</string>
   <string name="confidence">Confidence : %1$d</string>
+  <string name="simpan">Simpan</string>
+  <string name="jenis_aktivitas">Jenis Aktivitas</string>
 </resources>

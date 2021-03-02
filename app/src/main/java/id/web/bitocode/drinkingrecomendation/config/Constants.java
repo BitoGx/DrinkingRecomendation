@@ -3,6 +3,7 @@ package id.web.bitocode.drinkingrecomendation.config;
 
 public class Constants
 {
+  public static final String MAPVIEW_BUNDLE_KEY = "MapViewBundleKey";
   public static final String BROADCAST_DETECTED_ACTIVITY = "activity_intent";
   public static final String URL ="https://bitocode.web.id/DrinkingRecomendation/";
   public static final long DETECTION_INTERVAL_IN_MILLISECONDS = 15000;
