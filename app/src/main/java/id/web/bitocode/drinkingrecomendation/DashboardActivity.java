@@ -13,6 +13,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -34,9 +36,9 @@ public class DashboardActivity extends AppCompatActivity implements NavigationVi
   private ProgressDialog progressDialog;
   private NavigationView navigationView;
   private Toolbar toolbar;
-  private TextView tv_nama, tv_ttl, tv_berat, tv_tinggi,tv_jenisaktivitas,tv_tanggalaktivitas,tv_jarak,tv_waktu,tv_rekomendasiawal,tv_rekomendasiakhir;
+  private TextView tv_nama, tv_ttl, tv_berat, tv_tinggi,tv_jenisaktivitas,tv_tanggalaktivitas,tv_jarak,tv_waktu,tv_rekomendasiawal,tv_rekomendasiakhir,tv_dashboard;
   private String userid;
-
+  private LinearLayout layoutriwayat;
   private SessionUtil sessionUtil;
 
   @Override
@@ -78,11 +80,12 @@ public class DashboardActivity extends AppCompatActivity implements NavigationVi
     sessionUtil = new SessionUtil(this);
     userid = sessionUtil.getLoggedUser(this).getUserid();
 
-
     drawer = findViewById(R.id.drawer_dashboard_layout);
 
     navigationView = findViewById(R.id.nav_dashboard_view);
     navigationView.setNavigationItemSelectedListener(this);
+
+    layoutriwayat = findViewById(R.id.layout_dashboard_riwayatinfo);
 
     tv_nama             = findViewById(R.id.tv_dashboard_nama);
     tv_ttl              = findViewById(R.id.tv_dashboard_ttl);
@@ -94,6 +97,7 @@ public class DashboardActivity extends AppCompatActivity implements NavigationVi
     tv_waktu            = findViewById(R.id.tv_dashboard_waktu);
     tv_rekomendasiawal  = findViewById(R.id.tv_dashboard_rec_awal);
     tv_rekomendasiakhir = findViewById(R.id.tv_dashboard_rec_akhir);
+    tv_dashboard        = findViewById(R.id.tv_dashboard_title);
   }
 
   private void hideItem()
@@ -205,18 +209,26 @@ public class DashboardActivity extends AppCompatActivity implements NavigationVi
         {
           if (response.body() != null)
           {
-            tv_jenisaktivitas.setText(response.body().getJenisaktivitas());
-            tv_tanggalaktivitas.setText(response.body().getTanggalaktivitas());
-            tv_jarak.setText(response.body().getJarak());
-            int totalHours = Integer.parseInt(response.body().getWaktu()) / 3600;
-            int totalMinutes = (Integer.parseInt(response.body().getWaktu()) % 3600) / 60;
-            int totalSecs = Integer.parseInt(response.body().getWaktu()) % 60;
-            String waktu = String.format(Locale.getDefault(),
-                                             " %d Jam %02d Menit %02d Detik", totalHours,
-                                             totalMinutes, totalSecs);
-            tv_waktu.setText(waktu);
-            tv_rekomendasiawal.setText(response.body().getRekomendasiawal());
-            tv_rekomendasiakhir.setText(response.body().getRekomendasiakhir());
+            if (!response.body().getMessage().equalsIgnoreCase("0"))
+            {
+              tv_dashboard.setVisibility(View.GONE);
+              tv_tanggalaktivitas.setText(response.body().getTanggalaktivitas());
+              tv_jenisaktivitas.setText(response.body().getJenisaktivitas());
+              tv_jarak.setText(response.body().getJarak());
+              int totalHours = Integer.parseInt(response.body().getWaktu()) / 3600;
+              int totalMinutes = (Integer.parseInt(response.body().getWaktu()) % 3600) / 60;
+              int totalSecs = Integer.parseInt(response.body().getWaktu()) % 60;
+              String waktu = String.format(Locale.getDefault(),
+                                           " %d Jam %02d Menit %02d Detik", totalHours,
+                                           totalMinutes, totalSecs);
+              tv_waktu.setText(waktu);
+              tv_rekomendasiawal.setText(response.body().getRekomendasiawal());
+              tv_rekomendasiakhir.setText(response.body().getRekomendasiakhir());
+            }
+            else
+            {
+              layoutriwayat.setVisibility(View.GONE);
+            }
           }
           else
           {

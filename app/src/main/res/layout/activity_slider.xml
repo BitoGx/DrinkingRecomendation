@@ -37,7 +37,8 @@
     android:background="@null"
     android:onClick="onNextClick"
     android:text="@string/next"
-    android:textColor="@android:color/white" />
+    android:textColor="@android:color/white"
+    tools:ignore="RelativeOverlap" />
 
   <Button
     android:id="@+id/btn_skip"

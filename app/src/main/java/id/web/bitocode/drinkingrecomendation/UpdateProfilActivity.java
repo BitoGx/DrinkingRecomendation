@@ -44,7 +44,7 @@ public class UpdateProfilActivity extends AppCompatActivity
   private ProgressDialog progressDialog;
   private AlertDialog.Builder alertDialogbuilder;
   
-  private String email;
+  private String newemail,oldmail,userid,usertoken;
   
   @Override
   protected void onCreate(Bundle savedInstanceState)
@@ -69,7 +69,11 @@ public class UpdateProfilActivity extends AppCompatActivity
   {
     sessionUtil        = new SessionUtil(this);
     alertDialogbuilder = new AlertDialog.Builder(UpdateProfilActivity.this);
-    
+
+    userid    = sessionUtil.getLoggedUser(this).getUserid();
+    usertoken = sessionUtil.getLoggedUser(this).getUserToken();
+    oldmail   = sessionUtil.getLoggedUser(this).getEmail();
+
     selectedCalendar = Calendar.getInstance();
     thisCalendar     = Calendar.getInstance();
   
@@ -130,11 +134,13 @@ public class UpdateProfilActivity extends AppCompatActivity
         {
           etttl.setText(getResources().getString(R.string.validasi_tanggal));
           btnupdate.setClickable(false);
+          btnupdate.setVisibility(View.GONE);
         }
         else
         {
           String newdate = simpleDateFormat.format(selectedCalendar.getTime());
           etttl.setText(newdate);
+          btnupdate.setVisibility(View.VISIBLE);
           btnupdate.setClickable(true);
         }
       }
@@ -186,7 +192,7 @@ public class UpdateProfilActivity extends AppCompatActivity
   
   private boolean checkEmail(String email)
   {
-    return !email.equalsIgnoreCase(sessionUtil.getLoggedUser(this).getEmail());
+    return !email.equalsIgnoreCase(oldmail);
   }
   
   private void setUpConfirmationDialog(final Context context)
@@ -219,17 +225,15 @@ public class UpdateProfilActivity extends AppCompatActivity
   
   private void updateProfil(final Context context)
   {
-    String id           = sessionUtil.getLoggedUser(this).getUserid();
-    email               = etemail.getText().toString();
+    newemail            = etemail.getText().toString();
     String nama         = etnama.getText().toString();
     String ttl          = etttl.getText().toString();
     String personalrec  = etpersonalrec.getText().toString();
     String tinggi       = ettinggi.getText().toString();
     String berat        = etberat.getText().toString();
     String jeniskelamin = rbjeniskelamin.getText().toString();
-    String usertoken    = sessionUtil.getLoggedUser(this).getUserToken();
     
-    Call<UserModel.UserDataModel> call = APIService.Factory.create().postUpdateProfile(id, email,
+    Call<UserModel.UserDataModel> call = APIService.Factory.create().postUpdateProfile(userid, newemail,
             nama, ttl, personalrec, tinggi, berat, jeniskelamin, usertoken);
     
     call.enqueue(new Callback<UserModel.UserDataModel>()
@@ -242,7 +246,7 @@ public class UpdateProfilActivity extends AppCompatActivity
         {
           if (response.body() != null)
           {
-            if(checkEmail(email))
+            if(checkEmail(newemail))
             {
               if(response.body().getMessage().equalsIgnoreCase("Silahkan Cek Email Anda"))
               {

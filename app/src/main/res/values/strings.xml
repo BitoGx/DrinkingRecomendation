@@ -94,4 +94,6 @@
   <string name="confidence">Confidence : %1$d</string>
   <string name="simpan">Simpan</string>
   <string name="jenis_aktivitas">Jenis Aktivitas</string>
+  <string name="slider_image">Slider Image</string>
+  <string name="kosong">Kosong</string>
 </resources>

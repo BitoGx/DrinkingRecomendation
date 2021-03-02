@@ -1,6 +1,5 @@
 package id.web.bitocode.drinkingrecomendation.adapter;
 
-import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,12 +15,10 @@ import id.web.bitocode.drinkingrecomendation.model.RiwayatModel;
 
 public class RiwayatRecyclerViewAdapter extends RecyclerView.Adapter<RiwayatRecyclerViewAdapter.ViewHolder>
 {
-  private Context context;
   private List<RiwayatModel> riwayatModelList;
 
-  public RiwayatRecyclerViewAdapter(Context context, List<RiwayatModel> riwayatModelList)
+  public RiwayatRecyclerViewAdapter(List<RiwayatModel> riwayatModelList)
   {
-    this.context = context;
     this.riwayatModelList = riwayatModelList;
   }
   

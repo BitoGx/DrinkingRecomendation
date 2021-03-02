@@ -95,11 +95,13 @@ public class RegisterActivity extends AppCompatActivity
         {
           etttl.setText(getResources().getString(R.string.validasi_tanggal));
           btnregister.setClickable(false);
+          btnregister.setVisibility(View.GONE);
         }
         else
         {
           String newdate = simpleDateFormat.format(selectedCalendar.getTime());
           etttl.setText(newdate);
+          btnregister.setVisibility(View.VISIBLE);
           btnregister.setClickable(true);
         }
       }
