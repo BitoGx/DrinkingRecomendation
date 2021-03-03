@@ -1,9 +1,217 @@
 <?xml version="1.0" encoding="utf-8"?>
-<fragment xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
   xmlns:map="http://schemas.android.com/apk/res-auto"
   xmlns:tools="http://schemas.android.com/tools"
-  android:id="@+id/map"
-  android:name="com.google.android.gms.maps.SupportMapFragment"
   android:layout_width="match_parent"
   android:layout_height="match_parent"
-  tools:context=".MapsActivity" />
+  android:orientation="vertical"
+  tools:context=".MapsActivity">
+
+  <androidx.fragment.app.FragmentContainerView
+    android:id="@+id/map"
+    android:name="com.google.android.gms.maps.SupportMapFragment"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_margin="@dimen/activity_vertical_margin"
+    android:layout_weight="75">
+
+  </androidx.fragment.app.FragmentContainerView>
+
+  <LinearLayout
+    android:id="@+id/layout_maps_detail"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginStart="@dimen/activity_vertical_margin"
+    android:layout_marginEnd="@dimen/activity_vertical_margin"
+    android:layout_weight="25"
+    android:orientation="vertical">
+
+    <TextView
+      android:id="@+id/tv_maps_detail"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:text="@string/detail"
+      android:textSize="24sp" />
+
+    <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:orientation="horizontal">
+
+      <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/jarak_tempuh" />
+
+      <TextView
+        android:id="@+id/tv_maps_jarak"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+    </LinearLayout>
+
+    <LinearLayout
+
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:orientation="horizontal">
+
+      <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/waktu" />
+
+      <TextView
+        android:id="@+id/tv_maps_waktu"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+    </LinearLayout>
+
+    <TextView
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:text="@string/rekomendasi_awal"
+      android:textSize="18sp" />
+
+    <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:orientation="horizontal">
+
+      <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/jarak_tempuh" />
+
+      <EditText
+        android:id="@+id/et_maps_jarak_km"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:autofillHints="1"
+        android:hint="@string/_1"
+        android:inputType="numberDecimal" />
+
+      <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/km" />
+    </LinearLayout>
+
+    <LinearLayout
+
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:orientation="horizontal">
+
+      <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/waktu" />
+
+      <EditText
+        android:id="@+id/et_maps_waktu_jam"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:autofillHints="1"
+        android:hint="@string/_1"
+        android:inputType="number" />
+
+      <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/jam" />
+
+      <EditText
+        android:id="@+id/et_maps_waktu_menit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:autofillHints="1"
+        android:hint="@string/_1"
+        android:inputType="number" />
+
+      <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/menit" />
+
+    </LinearLayout>
+
+    <Button
+      android:id="@+id/btn_map_calculate"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_gravity="center"
+      android:onClick="onMapsHitungClick"
+      android:text="@string/hitung" />
+
+    <LinearLayout
+      android:id="@+id/layout_maps_rekomendasi"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:orientation="vertical">
+
+      <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:text="@string/rekomendasi_awal_maps_jarak"
+          android:textSize="14sp" />
+
+        <TextView
+          android:id="@+id/tv_maps_rekomendasiawal_jarak"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:textSize="14sp" />
+      </LinearLayout>
+
+      <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:text="@string/rekomendasi_awal_maps_waktu"
+          android:textSize="14sp" />
+
+        <TextView
+          android:id="@+id/tv_maps_rekomendasiawal_waktu"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:textSize="14sp" />
+      </LinearLayout>
+
+      <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:text="@string/rekomendasi_awal_maps_median"
+          android:textSize="14sp" />
+
+        <TextView
+          android:id="@+id/tv_maps_rekomendasiawal_median"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:textSize="14sp" />
+      </LinearLayout>
+    </LinearLayout>
+
+    <TextView
+      android:id="@+id/tv_maps_rekomendasi"
+      android:paddingTop="@dimen/activity_vertical_margin"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:text="@string/map_peringatan" />
+
+  </LinearLayout>
+
+</LinearLayout>
+

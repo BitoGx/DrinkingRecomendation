@@ -8,8 +8,8 @@ android {
         applicationId "id.web.bitocode.drinkingrecomendation"
         minSdkVersion 23
         targetSdkVersion 29
-        versionCode 9
-        versionName "0.6.7"
+        versionCode 11
+        versionName "0.6.9"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }

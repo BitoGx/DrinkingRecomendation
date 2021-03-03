@@ -77,16 +77,16 @@
 
 
   <string name="user_profile">User Profile</string>
-  <string name="nama_dashboard">Nama : </string>
-  <string name="ttl_dashboard">Tanggal Lahir : </string>
-  <string name="tinggi_dashboard">Tinggi : </string>
-  <string name="berat_dashboard">Berat : </string>
-  <string name="jenisaktivitas_dashboard">Jenis Aktivitas : </string>
-  <string name="tanggalaktivitas_dashboard">Tanggal Aktivitas : </string>
-  <string name="jarak_dashboard">Jarak : </string>
-  <string name="waktu_dashboard">Waktu : </string>
-  <string name="rekomendasiawal_dashboard">Rekomendasi Awal : </string>
-  <string name="rekomendasiakhir_dashboard">Rekomendasi Akhir : </string>
+  <string name="nama_dashboard">Nama :</string>
+  <string name="ttl_dashboard">Tanggal Lahir :</string>
+  <string name="tinggi_dashboard">Tinggi :</string>
+  <string name="berat_dashboard">Berat :</string>
+  <string name="jenisaktivitas_dashboard">Jenis Aktivitas :</string>
+  <string name="tanggalaktivitas_dashboard">Tanggal Aktivitas :</string>
+  <string name="jarak_dashboard">Jarak :</string>
+  <string name="waktu_dashboard">Waktu :</string>
+  <string name="rekomendasiawal_dashboard">Rekomendasi Awal :</string>
+  <string name="rekomendasiakhir_dashboard">Rekomendasi Akhir :</string>
   <string name="activity_image">Activity Image</string>
   <string name="riwayat_terakhir">Riwayat Terakhir</string>
   <string name="walking_time">Walking Time :</string>
@@ -96,4 +96,15 @@
   <string name="jenis_aktivitas">Jenis Aktivitas</string>
   <string name="slider_image">Slider Image</string>
   <string name="kosong">Kosong</string>
+  <string name="detail">Detail :</string>
+  <string name="_1">1</string>
+  <string name="km">Km</string>
+  <string name="m">m</string>
+  <string name="jam">Jam</string>
+  <string name="menit">menit</string>
+  <string name="hitung">Hitung</string>
+  <string name="map_peringatan">Jika waktu olahraga melebihi 1 jam disarankan jangan hanya minum air putih cari minuman yang memiliki karbohidrat seperti jus atau sport drink</string>
+  <string name="rekomendasi_awal_maps_jarak">Rekomendasi awal berdasarkan jarak:</string>
+  <string name="rekomendasi_awal_maps_waktu">Rekomendasi awal berdasarkan waktu:</string>
+  <string name="rekomendasi_awal_maps_median">Rekomendasi awal berdasarkan rata-rata:</string>
 </resources>

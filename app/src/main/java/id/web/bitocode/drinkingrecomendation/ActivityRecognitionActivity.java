@@ -14,6 +14,7 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import android.content.pm.PackageManager;
 import android.location.Location;
+import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Handler;
@@ -39,7 +40,7 @@ import id.web.bitocode.drinkingrecomendation.util.SessionUtil;
 
 import static id.web.bitocode.drinkingrecomendation.config.Constants.MAPVIEW_BUNDLE_KEY;
 
-public class ActivityRecognitionActivity extends AppCompatActivity implements OnMapReadyCallback
+public class ActivityRecognitionActivity extends AppCompatActivity implements OnMapReadyCallback, LocationListener
 {
   BroadcastReceiver broadcastReceiver;
   private int secondsfortotal, secondsforwalking, secondsforwalkingtemp, secondsforrunningtemp, secondsforrunning, needtodrink, weight, height, weightcategory;
@@ -49,9 +50,11 @@ public class ActivityRecognitionActivity extends AppCompatActivity implements On
   private ImageView imgactivity;
   private Button btnstart;
   private Handler handler;
-
+  private GoogleMap mMap;
   private MapView mMapView;
-
+  private LatLng userlocation;
+  private MarkerOptions options;
+  private float zoomLevel = 16.0f;
 
   @Override
   protected void onCreate(Bundle savedInstanceState)
@@ -80,6 +83,7 @@ public class ActivityRecognitionActivity extends AppCompatActivity implements On
   {
     handler = new Handler();
     SessionUtil sessionUtil = new SessionUtil(this);
+    options = new MarkerOptions();
     weight = Integer.parseInt(sessionUtil.getLoggedUser(this).getBeratbadan());
     height = Integer.parseInt(sessionUtil.getLoggedUser(this).getTinggibadan());
     jeniskelamin = sessionUtil.getLoggedUser(this).getJeniskelamin();
@@ -360,6 +364,7 @@ public class ActivityRecognitionActivity extends AppCompatActivity implements On
   @Override
   public void onMapReady(GoogleMap map)
   {
+    mMap = map;
     LocationManager lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
     if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) !=
       PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission
@@ -371,7 +376,11 @@ public class ActivityRecognitionActivity extends AppCompatActivity implements On
     double longitude = location.getLongitude();
     double latitude = location.getLatitude();
 
-    Log.i("Check Me:", "Lat = " + latitude + " Long : " + longitude);
+    userlocation = new LatLng(latitude, longitude);
+    options.position(userlocation);
+    map.addMarker(options);
+    map.moveCamera(CameraUpdateFactory.newLatLngZoom(userlocation, zoomLevel));
+
     LatLng user = new LatLng(latitude, longitude);
     map.addMarker(new MarkerOptions().position(user).title("That's You"));
     map.moveCamera(CameraUpdateFactory.newLatLng(user));
@@ -439,5 +448,34 @@ public class ActivityRecognitionActivity extends AppCompatActivity implements On
     Intent intent = new Intent(ActivityRecognitionActivity.this, BackgroundDetectedActivitiesService.class);
     active = false;
     stopService(intent);
+  }
+
+
+  @Override
+  public void onLocationChanged(Location location)
+  {
+    double lat = location.getLatitude();
+    double lng = location.getLongitude();
+    mMap.addMarker(new MarkerOptions().position(new LatLng(lat, lng)).title("Marker"));
+    mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(lat, lng), 10));
+    Log.i("Latitude", Double.toString(lat));
+  }
+
+  @Override
+  public void onStatusChanged(String provider, int status, Bundle extras)
+  {
+
+  }
+
+  @Override
+  public void onProviderEnabled(String provider)
+  {
+
+  }
+
+  @Override
+  public void onProviderDisabled(String provider)
+  {
+
   }
 }
