@@ -39,7 +39,7 @@ public class BackgroundDetectedActivitiesService extends Service
     mPendingIntent = PendingIntent.getService(this, 1, mIntentService, PendingIntent.FLAG_UPDATE_CURRENT);
     requestActivityUpdatesButtonHandler();
   }
-  
+
   @Nullable
   @Override
   public IBinder onBind(Intent intent)
@@ -57,8 +57,8 @@ public class BackgroundDetectedActivitiesService extends Service
   public void requestActivityUpdatesButtonHandler()
   {
     Task<Void> task = mActivityRecognitionClient.requestActivityUpdates(
-            Constants.DETECTION_INTERVAL_IN_MILLISECONDS,
-            mPendingIntent);
+      Constants.DETECTION_INTERVAL_IN_MILLISECONDS,
+      mPendingIntent);
     
     task.addOnSuccessListener(new OnSuccessListener<Void>()
     {

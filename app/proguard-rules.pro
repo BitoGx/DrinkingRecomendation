@@ -73,4 +73,6 @@
 
 # Application classes that will be serialized/deserialized over Gson
 -keepclasseswithmembers class id.web.bitocode.drinkingrecomendation.model.** {*;}
+-keep class id.web.bitocode.drinkingrecomendation.MapsActivity.** {*;}
+-keep class id.web.bitocode.drinkingrecomendation.ActivityRecognitionActivity.** {*;}
 ##--- End:GSON ----

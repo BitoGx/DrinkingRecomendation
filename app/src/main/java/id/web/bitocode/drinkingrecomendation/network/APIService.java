@@ -32,7 +32,17 @@ public interface APIService
                                  @Part("berat") RequestBody berat,
                                  @Part("jeniskelamin") RequestBody jeniskelamin);
 
-  
+  @Multipart
+  @POST("API/simpanRiwayat.php")
+  Call<MessageModel> postRiwayat(@Part("iduser") RequestBody iduser,
+                                 @Part("jenisaktivitas") RequestBody jenisaktivitas,
+                                 @Part("tanggalaktivitas") RequestBody tanggalaktivitas,
+                                 @Part("jarak") RequestBody jarak,
+                                 @Part("waktu") RequestBody waktu,
+                                 @Part("rekomendasiawal") RequestBody rekomendasiawal,
+                                 @Part("rekomendasiakhir") RequestBody rekomendasiakhir);
+
+
   @FormUrlEncoded
   @POST("API/login.php")
   Call<UserModel.UserDataModel> postLogin(@Field("username") String username,
@@ -73,8 +83,8 @@ public interface APIService
   @POST("API/selectRiwayat.php")
   Call<RiwayatModel.RiwayatDataModel> postGetRiwayat(@Field("id") String id,
                                                      @Field("type") String type);
-  
-  
+
+
   class Factory
   {
     public static APIService create()

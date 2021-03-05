@@ -3,6 +3,7 @@ package id.web.bitocode.drinkingrecomendation;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager.widget.ViewPager;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -11,6 +12,11 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import com.nabinbhandari.android.permissions.PermissionHandler;
+import com.nabinbhandari.android.permissions.Permissions;
+
+import java.util.ArrayList;
 
 import id.web.bitocode.drinkingrecomendation.adapter.SliderViewPagerAdapter;
 import id.web.bitocode.drinkingrecomendation.model.SliderModel;
@@ -24,43 +30,43 @@ public class SliderActivity extends AppCompatActivity
   private Button btnSkip, btnNext;
   private PrefManager prefManager;
   private SliderViewPagerAdapter sliderViewPagerAdapter;
-  
-  
+
+
   @Override
   protected void onCreate(Bundle savedInstanceState)
   {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_slider);
-    
+
     checkFirstTimeLaunch();
     inisialisasi();
   }
-  
+
   private void launchLoginActivity(Context context)
   {
     prefManager.setFirstTimeLaunch(false);
     startActivity(new Intent(context, LoginActivity.class));
     finish();
   }
-  
+
   private void checkFirstTimeLaunch()
   {
     prefManager = new PrefManager(this);
-    if(!prefManager.isFirstTimeLaunch())
+    if (!prefManager.isFirstTimeLaunch())
     {
       launchLoginActivity(this);
     }
   }
-  
+
   private void addBottomDots(int currentPage)
   {
     TextView[] dots = new TextView[SliderModel.values().length];
-    
+
     int[] colorsActive = getResources().getIntArray(R.array.array_dot_active);
     int[] colorsInactive = getResources().getIntArray(R.array.array_dot_inactive);
-    
+
     dotsLayout.removeAllViews();
-    
+
     for (int i = 0; i < dots.length; i++)
     {
       dots[i] = new TextView(this);
@@ -69,31 +75,31 @@ public class SliderActivity extends AppCompatActivity
       dots[i].setTextColor(colorsInactive[currentPage]);
       dotsLayout.addView(dots[i]);
     }
-    
+
     if (dots.length > 0)
       dots[currentPage].setTextColor(colorsActive[currentPage]);
   }
-  
+
   private int getItem()
   {
     return viewPager.getCurrentItem() + 1;
   }
-  
+
   private void inisialisasi()
   {
-    viewPager  = findViewById(R.id.view_pager);
+    viewPager = findViewById(R.id.view_pager);
     dotsLayout = findViewById(R.id.layoutDots);
-    btnSkip    = findViewById(R.id.btn_skip);
-    btnNext    = findViewById(R.id.btn_next);
-  
+    btnSkip = findViewById(R.id.btn_skip);
+    btnNext = findViewById(R.id.btn_next);
+
     addBottomDots(0);
-  
+
     sliderViewPagerAdapter = new SliderViewPagerAdapter(this);
     viewPager.setAdapter(sliderViewPagerAdapter);
     ViewPagerListener();
     viewPager.addOnPageChangeListener(viewPagerPageChangeListener);
   }
-  
+
   private void ViewPagerListener()
   {
     viewPagerPageChangeListener = new ViewPager.OnPageChangeListener()
@@ -101,14 +107,14 @@ public class SliderActivity extends AppCompatActivity
       @Override
       public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels)
       {
-      
+
       }
-    
+
       @Override
       public void onPageSelected(int position)
       {
         addBottomDots(position);
-      
+
         if (position == SliderModel.values().length - 1)
         {
           btnNext.setText(getString(R.string.start));
@@ -120,11 +126,11 @@ public class SliderActivity extends AppCompatActivity
           btnSkip.setVisibility(View.VISIBLE);
         }
       }
-    
+
       @Override
       public void onPageScrollStateChanged(int state)
       {
-      
+
       }
     };
   }
@@ -138,7 +144,28 @@ public class SliderActivity extends AppCompatActivity
     }
     else
     {
-      launchLoginActivity(this);
+      String[] permissions = {Manifest.permission.ACCESS_FINE_LOCATION,Manifest.permission.ACCESS_COARSE_LOCATION,Manifest.permission.INTERNET,};
+      String rationale = "Please provide the following permission to use this APP";
+      Permissions.Options options = new Permissions.Options()
+        .setRationaleDialogTitle("Info")
+        .setSettingsDialogTitle("Warning");
+
+      Permissions.check(this, permissions, rationale, options, new PermissionHandler()
+      {
+        @Override
+        public void onGranted()
+        {
+          launchLoginActivity(SliderActivity.this);
+        }
+
+        @Override
+        public void onDenied(Context context, ArrayList<String> deniedPermissions)
+        {
+          finish();
+          System.exit(0);
+        }
+      });
+
     }
   }
 

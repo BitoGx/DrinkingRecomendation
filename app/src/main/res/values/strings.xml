@@ -107,4 +107,10 @@
   <string name="rekomendasi_awal_maps_jarak">Rekomendasi awal berdasarkan jarak:</string>
   <string name="rekomendasi_awal_maps_waktu">Rekomendasi awal berdasarkan waktu:</string>
   <string name="rekomendasi_awal_maps_median">Rekomendasi awal berdasarkan rata-rata:</string>
+  <string name="details_message_activity_permission_rational">This app\'s experience requires access to your phone\'s activity transitions to display changes from walking to standing still.</string>
+  <string name="no_thanks_activity_permission_rational">No Thanks</string>
+  <string name="continue_activity_permission_rational">Continue</string>
+  <string name="main_message_activity_permission_rational">Track activity changes by letting us read your phone\'s activity transitions.</string>
+  <string name="tanggal_aktivitas_simpan">Tanggal Aktivitas</string>
+  <string name="mulai_aktivitas">Mulai Aktivitas</string>
 </resources>

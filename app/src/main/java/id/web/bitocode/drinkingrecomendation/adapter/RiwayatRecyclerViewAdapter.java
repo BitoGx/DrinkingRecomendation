@@ -9,6 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
+import java.util.Locale;
 
 import id.web.bitocode.drinkingrecomendation.R;
 import id.web.bitocode.drinkingrecomendation.model.RiwayatModel;
@@ -36,8 +37,22 @@ public class RiwayatRecyclerViewAdapter extends RecyclerView.Adapter<RiwayatRecy
     RiwayatModel model = riwayatModelList.get(position);
     holder.tv_tanggal.setText(model.getTanggalaktivitas());
     holder.tv_jenis.setText(model.getJenisaktivitas());
-    holder.tv_jarak.setText(model.getJarak());
-    holder.tv_waktu.setText(model.getWaktu());
+
+    int totalKm = Integer.parseInt(model.getJarak()) / 1000;
+    int totalM = (Integer.parseInt(model.getJarak()) % 1000);
+    String jarak = String.format(Locale.getDefault(),
+                                 " %d Km %02d M", totalKm,
+                                 totalM);
+    holder.tv_jarak.setText(jarak);
+
+    int totalHours = Integer.parseInt(model.getWaktu()) / 3600;
+    int totalMinutes = (Integer.parseInt(model.getWaktu()) % 3600) / 60;
+    int totalSecs = Integer.parseInt(model.getWaktu()) % 60;
+    String waktu = String.format(Locale.getDefault(),
+                                 " %d Jam %02d Menit %02d Detik", totalHours,
+                                 totalMinutes, totalSecs);
+    holder.tv_waktu.setText(waktu);
+
     holder.tv_rec_awal.setText(model.getRekomendasiawal());
     holder.tv_rec_akhir.setText(model.getRekomendasiakhir());
   }

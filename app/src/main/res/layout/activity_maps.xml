@@ -202,15 +202,22 @@
           android:layout_height="wrap_content"
           android:textSize="14sp" />
       </LinearLayout>
+
+
+      <TextView
+        android:id="@+id/tv_maps_rekomendasi"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="@dimen/activity_vertical_margin"
+        android:text="@string/map_peringatan" />
+
+      <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:onClick="onMapsMulaiClick"
+        android:text="@string/mulai_aktivitas" />
     </LinearLayout>
-
-    <TextView
-      android:id="@+id/tv_maps_rekomendasi"
-      android:paddingTop="@dimen/activity_vertical_margin"
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:text="@string/map_peringatan" />
-
   </LinearLayout>
 
 </LinearLayout>

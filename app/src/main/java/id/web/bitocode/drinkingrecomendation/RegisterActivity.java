@@ -133,6 +133,70 @@ public class RegisterActivity extends AppCompatActivity
             || TextUtils.isEmpty(rbjeniskelamin.getText().toString());
   }
 
+  private boolean validatePassword()
+  {
+    return etfirstpass.getText().toString().equals(etsecondpass.getText().toString());
+  }
+
+  private void saveUserData(final Context context)
+  {
+    String email        = etemail.getText().toString();
+    String username     = etusername.getText().toString();
+    String password     = etfirstpass.getText().toString();
+    String nama         = etnama.getText().toString();
+    String ttl          = etttl.getText().toString();
+    String tinggi       = ettinggi.getText().toString();
+    String berat        = etberat.getText().toString();
+    String jeniskelamin = rbjeniskelamin.getText().toString();
+
+    RequestBody requestBodyEmail = RequestBody.create(MediaType.parse("text/plain"),email);
+    RequestBody requestBodyUsername = RequestBody.create(MediaType.parse("text/plain"),username);
+    RequestBody requestBodyPassword = RequestBody.create(MediaType.parse("text/plain"),password);
+    RequestBody requestBodyNama = RequestBody.create(MediaType.parse("text/plain"),nama);
+    RequestBody requestBodyTtl = RequestBody.create(MediaType.parse("text/plain"),ttl);
+    RequestBody requestBodyTinggi = RequestBody.create(MediaType.parse("text/plain"),tinggi);
+    RequestBody requestBodyBerat = RequestBody.create(MediaType.parse("text/plain"),berat);
+    RequestBody requestBodyJenisKelamin = RequestBody.create(MediaType.parse("text/plain"),jeniskelamin);
+
+    Call<MessageModel> call = APIService.Factory.create().postRegister(requestBodyEmail,requestBodyUsername , requestBodyPassword,
+                                                                       requestBodyNama, requestBodyTtl, requestBodyTinggi, requestBodyBerat,
+                                                                       requestBodyJenisKelamin);
+
+    call.enqueue(new Callback<MessageModel>()
+    {
+      @Override
+      public void onResponse(@NonNull Call<MessageModel> call, @NonNull Response<MessageModel> response)
+      {
+        progressDialog.dismiss();
+        if (response.isSuccessful())
+        {
+          if (response.body() != null)
+          {
+            Toast.makeText(context, response.body().getMessage(), Toast.LENGTH_SHORT).show();
+            String msg = response.body().getMessage();
+            if(msg.equalsIgnoreCase("Cek Email Anda"))
+            {
+              Intent intent = new Intent(context, LoginActivity.class);
+              startActivity(intent);
+              finish();
+            }
+          }
+          else
+          {
+            Toast.makeText(context, "Maaf server memberikan response yang salah", Toast.LENGTH_SHORT).show();
+          }
+        }
+      }
+
+      @Override
+      public void onFailure(@NonNull Call<MessageModel> call, @NonNull Throwable t)
+      {
+        progressDialog.dismiss();
+        Toast.makeText(context, t.getMessage(), Toast.LENGTH_SHORT).show();
+      }
+    });
+  }
+
   public void onRegisterClick(View view)
   {
     if(validateData())
@@ -152,70 +216,6 @@ public class RegisterActivity extends AppCompatActivity
         saveUserData(this);
       }
     }
-  }
-  
-  private boolean validatePassword()
-  {
-    return etfirstpass.getText().toString().equals(etsecondpass.getText().toString());
-  }
-  
-  private void saveUserData(final Context context)
-  {
-    String email        = etemail.getText().toString();
-    String username     = etusername.getText().toString();
-    String password     = etfirstpass.getText().toString();
-    String nama         = etnama.getText().toString();
-    String ttl          = etttl.getText().toString();
-    String tinggi       = ettinggi.getText().toString();
-    String berat        = etberat.getText().toString();
-    String jeniskelamin = rbjeniskelamin.getText().toString();
-    
-    RequestBody requestBodyEmail = RequestBody.create(MediaType.parse("text/plain"),email);
-    RequestBody requestBodyUsername = RequestBody.create(MediaType.parse("text/plain"),username);
-    RequestBody requestBodyPassword = RequestBody.create(MediaType.parse("text/plain"),password);
-    RequestBody requestBodyNama = RequestBody.create(MediaType.parse("text/plain"),nama);
-    RequestBody requestBodyTtl = RequestBody.create(MediaType.parse("text/plain"),ttl);
-    RequestBody requestBodyTinggi = RequestBody.create(MediaType.parse("text/plain"),tinggi);
-    RequestBody requestBodyBerat = RequestBody.create(MediaType.parse("text/plain"),berat);
-    RequestBody requestBodyJenisKelamin = RequestBody.create(MediaType.parse("text/plain"),jeniskelamin);
-    
-    Call<MessageModel> call = APIService.Factory.create().postRegister(requestBodyEmail,requestBodyUsername , requestBodyPassword,
-            requestBodyNama, requestBodyTtl, requestBodyTinggi, requestBodyBerat,
-            requestBodyJenisKelamin);
-    
-    call.enqueue(new Callback<MessageModel>()
-    {
-      @Override
-      public void onResponse(@NonNull Call<MessageModel> call, @NonNull Response<MessageModel> response)
-      {
-        progressDialog.dismiss();
-        if (response.isSuccessful())
-        {
-          if (response.body() != null)
-          {
-            Toast.makeText(context, response.body().getMessage(), Toast.LENGTH_SHORT).show();
-            String msg = response.body().getMessage();
-            if(msg.equals("Cek Email Anda"))
-            {
-              Intent intent = new Intent(context, LoginActivity.class);
-              startActivity(intent);
-              finish();
-            }
-          }
-          else
-          {
-            Toast.makeText(context, "Maaf server memberikan response yang salah", Toast.LENGTH_SHORT).show();
-          }
-        }
-      }
-  
-      @Override
-      public void onFailure(@NonNull Call<MessageModel> call, @NonNull Throwable t)
-      {
-        progressDialog.dismiss();
-        Toast.makeText(context, t.getMessage(), Toast.LENGTH_SHORT).show();
-      }
-    });
   }
 
   public void onRegisterBackClick(View view)

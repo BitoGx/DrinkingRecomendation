@@ -120,12 +120,6 @@ public class DashboardActivity extends AppCompatActivity implements NavigationVi
   {
     int id = item.getItemId();
 
-    if (id == R.id.nav_activityrecognition)
-    {
-      Intent intent = new Intent(this, ActivityRecognitionActivity.class);
-      startActivity(intent);
-    }
-
     if (id == R.id.nav_rekomendasi)
     {
       Intent intent = new Intent(this, MapsActivity.class);
@@ -214,7 +208,14 @@ public class DashboardActivity extends AppCompatActivity implements NavigationVi
               tv_dashboard.setVisibility(View.GONE);
               tv_tanggalaktivitas.setText(response.body().getTanggalaktivitas());
               tv_jenisaktivitas.setText(response.body().getJenisaktivitas());
-              tv_jarak.setText(response.body().getJarak());
+
+              int totalKm = Integer.parseInt(response.body().getJarak()) / 1000;
+              int totalM = (Integer.parseInt(response.body().getJarak()) % 1000);
+              String jarak = String.format(Locale.getDefault(),
+                                           " %d Km %02d M", totalKm,
+                                           totalM);
+              tv_jarak.setText(jarak);
+
               int totalHours = Integer.parseInt(response.body().getWaktu()) / 3600;
               int totalMinutes = (Integer.parseInt(response.body().getWaktu()) % 3600) / 60;
               int totalSecs = Integer.parseInt(response.body().getWaktu()) % 60;
@@ -222,6 +223,7 @@ public class DashboardActivity extends AppCompatActivity implements NavigationVi
                                            " %d Jam %02d Menit %02d Detik", totalHours,
                                            totalMinutes, totalSecs);
               tv_waktu.setText(waktu);
+
               tv_rekomendasiawal.setText(response.body().getRekomendasiawal());
               tv_rekomendasiakhir.setText(response.body().getRekomendasiakhir());
             }

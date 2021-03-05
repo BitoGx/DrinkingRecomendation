@@ -1,21 +1,15 @@
 package id.web.bitocode.drinkingrecomendation;
 
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-
-import androidx.core.app.ActivityCompat;
-import androidx.localbroadcastmanager.content.LocalBroadcastManager;
-
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -23,38 +17,59 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.google.android.gms.location.DetectedActivity;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.Polyline;
+import com.google.android.gms.maps.model.PolylineOptions;
+import com.google.android.gms.tasks.OnSuccessListener;
 
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 
+import id.web.bitocode.drinkingrecomendation.Rationale.PermissionRationalActivity;
 import id.web.bitocode.drinkingrecomendation.Service.BackgroundDetectedActivitiesService;
 import id.web.bitocode.drinkingrecomendation.config.Constants;
+import id.web.bitocode.drinkingrecomendation.util.DirectionsJSONParser;
 import id.web.bitocode.drinkingrecomendation.util.SessionUtil;
 
 import static id.web.bitocode.drinkingrecomendation.config.Constants.MAPVIEW_BUNDLE_KEY;
 
-public class ActivityRecognitionActivity extends AppCompatActivity implements OnMapReadyCallback, LocationListener
+public class ActivityRecognitionActivity extends AppCompatActivity implements OnMapReadyCallback
 {
-  BroadcastReceiver broadcastReceiver;
-  private int secondsfortotal, secondsforwalking, secondsforwalkingtemp, secondsforrunningtemp, secondsforrunning, needtodrink, weight, height, weightcategory;
-  private String jeniskelamin;
+  private BroadcastReceiver broadcastReceiver;
+  private int totalwaktu, totalwaktujalan, tempwaktujalan, tempwaktulari, totalwaktulari, rekomendasi, weight, height, weightcategory;
+  private final boolean runningQOrLater = android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q;
+  private String rekomendasiawal, response, jaraktempuh;
+  private double longitude, latitude;
   private Boolean active, running, wasRunning;
-  private TextView tv_activity, tv_confidence, tv_timeview, tv_walkingtime, tv_runningtime;
+  private TextView tvactivity, tvconfidence, tvtimeview, tvwalkingtime, tvrunningtime,tvactivityrecogrekomendasi;
   private ImageView imgactivity;
   private Button btnstart;
   private Handler handler;
-  private GoogleMap mMap;
+  private GoogleMap googlemap;
   private MapView mMapView;
   private LatLng userlocation;
-  private MarkerOptions options;
-  private float zoomLevel = 16.0f;
+  private Polyline mPolyline;
+  private Button btnactivityrecognitionstop;
+  private final float zoomLevel = 16.0f;
 
   @Override
   protected void onCreate(Bundle savedInstanceState)
@@ -63,12 +78,10 @@ public class ActivityRecognitionActivity extends AppCompatActivity implements On
     setContentView(R.layout.activity_activityrecognition);
 
     setUpActionBar();
-
     inisialisasi();
-    initGoogleMap(savedInstanceState);
 
-    runTimer();
-    BroadcastReceiverListener();
+    checkActivityRecognitionPermission();
+    initGoogleMap(savedInstanceState);
   }
 
   private void setUpActionBar()
@@ -79,66 +92,12 @@ public class ActivityRecognitionActivity extends AppCompatActivity implements On
     actionbar.setTitle(R.string.menu_activity_recognition);
   }
 
-  private void inisialisasi()
-  {
-    handler = new Handler();
-    SessionUtil sessionUtil = new SessionUtil(this);
-    options = new MarkerOptions();
-    weight = Integer.parseInt(sessionUtil.getLoggedUser(this).getBeratbadan());
-    height = Integer.parseInt(sessionUtil.getLoggedUser(this).getTinggibadan());
-    jeniskelamin = sessionUtil.getLoggedUser(this).getJeniskelamin();
-    weightcategory = checkBMI(countBMI(), jeniskelamin);
-
-    btnstart = findViewById(R.id.btn_activityrecog_start);
-
-    active = false;
-    running = false;
-    wasRunning = false;
-
-    secondsfortotal = 0;
-    secondsforrunning = 0;
-    secondsforrunningtemp = 0;
-    secondsforwalking = 0;
-    secondsforwalkingtemp = 0;
-    needtodrink = 0;
-
-    tv_activity = findViewById(R.id.tv_activityrecog_activity);
-    tv_confidence = findViewById(R.id.tv_activityrecog_confidence);
-    tv_timeview = findViewById(R.id.tv_activityrecog_time_view);
-    tv_walkingtime = findViewById(R.id.tv_activityrecog_walking_time);
-    tv_runningtime = findViewById(R.id.tv_activityrecog_running_time);
-
-    imgactivity = findViewById(R.id.img_activityrecog_activity);
-  }
-
-  private void initGoogleMap(Bundle savedInstanceState)
-  {
-    Bundle mapViewBundle = null;
-    if (savedInstanceState != null)
-    {
-      mapViewBundle = savedInstanceState.getBundle(MAPVIEW_BUNDLE_KEY);
-    }
-    mMapView = (MapView) findViewById(R.id.mapView);
-    mMapView.onCreate(mapViewBundle);
-
-    mMapView.getMapAsync(this);
-  }
-
-  private float countBMI()
-  {
-    float heightinmeter = (float) height / 100;
-    double bmi = weight / Math.pow(heightinmeter, 2);
-
-    return (float) bmi;
-  }
-
   private int checkBMI(float bmi, String jk)
   {
     /*
     Kurus = 0
     Normal = 1
-    Kegemukan = 2
-    Obesitas = 3
+    Obesitas = 2
      */
     if (jk.equalsIgnoreCase("Pria"))
     {
@@ -150,13 +109,9 @@ public class ActivityRecognitionActivity extends AppCompatActivity implements On
       {
         return 1;
       }
-      else if (Float.compare(bmi, 24f) > 0 && Float.compare(bmi, 26f) <= 0)
-      {
-        return 2;
-      }
       else
       {
-        return 3;
+        return 2;
       }
     }
     else
@@ -169,52 +124,90 @@ public class ActivityRecognitionActivity extends AppCompatActivity implements On
       {
         return 1;
       }
-      else if (Float.compare(bmi, 22f) > 0 && Float.compare(bmi, 26f) <= 0)
+      else
       {
         return 2;
       }
-      else
-      {
-        return 3;
-      }
     }
   }
 
-  private void BroadcastReceiverListener()
+  private float countBMI()
   {
-    broadcastReceiver = new BroadcastReceiver()
-    {
-      @Override
-      public void onReceive(Context context, Intent intent)
-      {
-        if (intent.getAction().equals(Constants.BROADCAST_DETECTED_ACTIVITY))
-        {
-          int type = intent.getIntExtra("type", -1);
-          int confidence = intent.getIntExtra("confidence", 0);
-          handleUserActivity(type, confidence);
-        }
-      }
-    };
+    float heightinmeter = (float) height / 100;
+    double bmi = weight / Math.pow(heightinmeter, 2);
+
+    return (float) bmi;
   }
 
-  @Override
-  public void onSaveInstanceState(Bundle savedInstanceState)
+  private void inisialisasi()
   {
-    super.onSaveInstanceState(savedInstanceState);
-    savedInstanceState.putInt("secondsfortotal", secondsfortotal);
-    savedInstanceState.putInt("secondsforrunning", secondsforrunning);
-    savedInstanceState.putInt("secondsforwalking", secondsforwalking);
-    savedInstanceState.putBoolean("running", running);
-    savedInstanceState.putBoolean("wasRunning", wasRunning);
+    Intent intent = getIntent();
+    jaraktempuh     = intent.getStringExtra("jarak");
+    rekomendasiawal = intent.getStringExtra("rekomendasiawal");
+    response        = intent.getStringExtra("route");
 
-    Bundle mapViewBundle = savedInstanceState.getBundle(MAPVIEW_BUNDLE_KEY);
-    if (mapViewBundle == null)
+    handler = new Handler();
+
+    SessionUtil sessionUtil = new SessionUtil(this);
+    weight = Integer.parseInt(sessionUtil.getLoggedUser(this).getBeratbadan());
+    height = Integer.parseInt(sessionUtil.getLoggedUser(this).getTinggibadan());
+    String jeniskelamin = sessionUtil.getLoggedUser(this).getJeniskelamin();
+    weightcategory = checkBMI(countBMI(), jeniskelamin);
+
+    btnstart = findViewById(R.id.btn_activityrecog_start);
+
+    active = false;
+    running = false;
+    wasRunning = false;
+
+    totalwaktu = 0;
+    totalwaktulari = 0;
+    tempwaktulari = 0;
+    totalwaktujalan = 0;
+    tempwaktujalan = 0;
+    rekomendasi = 0;
+
+    btnactivityrecognitionstop = findViewById(R.id.btn_activityrecog_stop);
+    btnactivityrecognitionstop.setVisibility(View.GONE);
+
+    tvactivity = findViewById(R.id.tv_activityrecog_activity);
+    tvconfidence = findViewById(R.id.tv_activityrecog_confidence);
+    tvtimeview = findViewById(R.id.tv_activityrecog_time_view);
+    tvwalkingtime = findViewById(R.id.tv_activityrecog_walking_time);
+    tvrunningtime = findViewById(R.id.tv_activityrecog_running_time);
+    tvactivityrecogrekomendasi = findViewById(R.id.tv_activityrecog_rekomendasi);
+
+    imgactivity = findViewById(R.id.img_activityrecog_activity);
+  }
+
+  @SuppressLint("InlinedApi")
+  private boolean activityRecognitionPermissionApproved()
+  {
+    if (runningQOrLater)
     {
-      mapViewBundle = new Bundle();
-      savedInstanceState.putBundle(MAPVIEW_BUNDLE_KEY, mapViewBundle);
+      return PackageManager.PERMISSION_GRANTED == ActivityCompat.checkSelfPermission(
+        this,
+        Manifest.permission.ACTIVITY_RECOGNITION
+      );
     }
+    else
+    {
+      return true;
+    }
+  }
 
-    mMapView.onSaveInstanceState(mapViewBundle);
+  public void checkActivityRecognitionPermission()
+  {
+    if (activityRecognitionPermissionApproved())
+    {
+      runTimer();
+      BroadcastReceiverListener();
+    }
+    else
+    {
+      Intent startIntent = new Intent(this, PermissionRationalActivity.class);
+      startActivityForResult(startIntent, 0);
+    }
   }
 
   private void handleUserActivity(int type, int confidence)
@@ -251,78 +244,128 @@ public class ActivityRecognitionActivity extends AppCompatActivity implements On
 
     if (confidence > Constants.CONFIDENCE)
     {
-      tv_activity.setText(label);
-      tv_confidence.setText(getString(R.string.confidence, confidence));
+      tvactivity.setText(label);
+      tvconfidence.setText(getString(R.string.confidence, confidence));
       imgactivity.setImageResource(icon);
     }
+  }
+
+  private void BroadcastReceiverListener()
+  {
+    broadcastReceiver = new BroadcastReceiver()
+    {
+      @Override
+      public void onReceive(Context context, Intent intent)
+      {
+        if (intent.getAction().equals(Constants.BROADCAST_DETECTED_ACTIVITY))
+        {
+          int type = intent.getIntExtra("type", -1);
+          int confidence = intent.getIntExtra("confidence", 0);
+          handleUserActivity(type, confidence);
+        }
+      }
+    };
   }
 
   private void runTimer()
   {
     handler.post(new Runnable()
     {
+      @SuppressLint("SetTextI18n")
       @Override
       public void run()
       {
-        int totalHours = secondsfortotal / 3600;
-        int totalMinutes = (secondsfortotal % 3600) / 60;
-        int totalSecs = secondsfortotal % 60;
+        int totalHours = totalwaktu / 3600;
+        int totalMinutes = (totalwaktu % 3600) / 60;
+        int totalSecs = totalwaktu % 60;
         String totalTime = String.format(Locale.getDefault(),
                                          "%d:%02d:%02d", totalHours,
                                          totalMinutes, totalSecs);
+        tvtimeview.setText(totalTime);
 
-        tv_timeview.setText(totalTime);
-        int walkingHours = secondsforwalking / 3600;
-        int walkingMinutes = (secondsforwalking % 3600) / 60;
-        int walkingSecs = secondsforwalking % 60;
+        int walkingHours = totalwaktujalan / 3600;
+        int walkingMinutes = (totalwaktujalan % 3600) / 60;
+        int walkingSecs = totalwaktujalan % 60;
         String walkingTime = String.format(Locale.getDefault(),
                                            "%d:%02d:%02d", walkingHours,
                                            walkingMinutes, walkingSecs);
+        tvwalkingtime.setText(walkingTime);
 
-        tv_walkingtime.setText(walkingTime);
-
-        int runningHours = secondsforrunning / 3600;
-        int runningMinutes = (secondsforrunning % 3600) / 60;
-        int runningSecs = secondsforrunning % 60;
+        int runningHours = totalwaktulari / 3600;
+        int runningMinutes = (totalwaktulari % 3600) / 60;
+        int runningSecs = totalwaktulari % 60;
         String runningTime = String.format(Locale.getDefault(),
                                            "%d:%02d:%02d", runningHours,
                                            runningMinutes, runningSecs);
-
-        tv_runningtime.setText(runningTime);
+        tvrunningtime.setText(runningTime);
 
         if (running)
         {
-          secondsfortotal++;
-          if (tv_activity.getText().toString().equals(getString(R.string.activity_running)))
+          totalwaktu++;
+          if (tvactivity.getText().toString().equals(getString(R.string.activity_running)))
           {
-            secondsforrunning++;
-            secondsforrunningtemp++;
+            totalwaktulari++;
+            tempwaktulari++;
           }
-          if (tv_activity.getText().toString().equals(getString(R.string.activity_walking)))
+          if (tvactivity.getText().toString().equals(getString(R.string.activity_walking)))
           {
-            secondsforwalking++;
-            secondsforwalkingtemp++;
+            totalwaktujalan++;
+            tempwaktujalan++;
           }
-          if (secondsfortotal >= 900)
+          if (totalwaktu >= 900)
           {
-            if ((secondsfortotal % 900) == 0)
+            if ((totalwaktu % 900) == 0)
             {
-              if (secondsforrunningtemp >= secondsforwalkingtemp)
+              if (tempwaktulari >= tempwaktujalan)
               {
-                secondsforrunningtemp = 0;
-                needtodrink += 150;
+                tempwaktulari = 0;
+                rekomendasi += 200;
               }
               else
               {
-                secondsforwalkingtemp = 0;
-                needtodrink += 200;
+                tempwaktujalan = 0;
+                rekomendasi += 150;
               }
+              tvactivityrecogrekomendasi.setText(Integer.toString(rekomendasi));
             }
           }
         }
         handler.postDelayed(this, 1000);
       }
     });
+  }
+
+  private void initGoogleMap(Bundle savedInstanceState)
+  {
+    Bundle mapViewBundle = null;
+    if (savedInstanceState != null)
+    {
+      mapViewBundle = savedInstanceState.getBundle(MAPVIEW_BUNDLE_KEY);
+    }
+    mMapView = (MapView) findViewById(R.id.mapView);
+    mMapView.onCreate(mapViewBundle);
+
+    mMapView.getMapAsync(this);
+  }
+
+  @Override
+  public void onSaveInstanceState(@NonNull Bundle savedInstanceState)
+  {
+    super.onSaveInstanceState(savedInstanceState);
+    savedInstanceState.putInt("totalwaktu", totalwaktu);
+    savedInstanceState.putInt("totalwaktulari", totalwaktulari);
+    savedInstanceState.putInt("totalwaktujalan", totalwaktujalan);
+    savedInstanceState.putBoolean("running", running);
+    savedInstanceState.putBoolean("wasRunning", wasRunning);
+
+    Bundle mapViewBundle = savedInstanceState.getBundle(MAPVIEW_BUNDLE_KEY);
+    if (mapViewBundle == null)
+    {
+      mapViewBundle = new Bundle();
+      savedInstanceState.putBundle(MAPVIEW_BUNDLE_KEY, mapViewBundle);
+    }
+
+    mMapView.onSaveInstanceState(mapViewBundle);
   }
 
   @Override
@@ -362,32 +405,6 @@ public class ActivityRecognitionActivity extends AppCompatActivity implements On
   }
 
   @Override
-  public void onMapReady(GoogleMap map)
-  {
-    mMap = map;
-    LocationManager lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-    if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) !=
-      PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission
-      (this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED)
-    {
-      return;
-    }
-    Location location = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-    double longitude = location.getLongitude();
-    double latitude = location.getLatitude();
-
-    userlocation = new LatLng(latitude, longitude);
-    options.position(userlocation);
-    map.addMarker(options);
-    map.moveCamera(CameraUpdateFactory.newLatLngZoom(userlocation, zoomLevel));
-
-    LatLng user = new LatLng(latitude, longitude);
-    map.addMarker(new MarkerOptions().position(user).title("That's You"));
-    map.moveCamera(CameraUpdateFactory.newLatLng(user));
-    map.setMyLocationEnabled(true);
-  }
-
-  @Override
   protected void onDestroy()
   {
     mMapView.onDestroy();
@@ -408,6 +425,7 @@ public class ActivityRecognitionActivity extends AppCompatActivity implements On
       running = true;
       btnstart.setText(R.string.pause);
       startTracking();
+      btnactivityrecognitionstop.setVisibility(View.VISIBLE);
     }
     else
     {
@@ -420,20 +438,14 @@ public class ActivityRecognitionActivity extends AppCompatActivity implements On
   public void onResetClick(View view)
   {
     running = false;
-    secondsfortotal = 0;
-    secondsforwalking = 0;
-    secondsforrunning = 0;
-    secondsforwalkingtemp = 0;
-    secondsforrunningtemp = 0;
+    totalwaktu = 0;
+    totalwaktujalan = 0;
+    totalwaktulari = 0;
+    tempwaktujalan = 0;
+    tempwaktulari = 0;
+    rekomendasi = 0;
     btnstart.setText(R.string.start);
     stopTracking();
-  }
-
-  public void onActivityRecognitionSimpanClick(View view)
-  {
-    Intent intent = new Intent(this, SimpanRekomendasiActivity.class);
-    startActivity(intent);
-    finish();
   }
 
   private void startTracking()
@@ -450,32 +462,134 @@ public class ActivityRecognitionActivity extends AppCompatActivity implements On
     stopService(intent);
   }
 
-
-  @Override
-  public void onLocationChanged(Location location)
+  private boolean checkMapPermission()
   {
-    double lat = location.getLatitude();
-    double lng = location.getLongitude();
-    mMap.addMarker(new MarkerOptions().position(new LatLng(lat, lng)).title("Marker"));
-    mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(lat, lng), 10));
-    Log.i("Latitude", Double.toString(lat));
+    return ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED || ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED;
+  }
+
+  private void drawRoute()
+  {
+    ActivityRecognitionActivity.ParserTask parserTask = new ActivityRecognitionActivity.ParserTask();
+    parserTask.execute(response);
+  }
+
+  @SuppressLint("StaticFieldLeak")
+  private class ParserTask extends AsyncTask<String, Integer, List<List<HashMap<String, String>>>>
+  {
+
+    @Override
+    protected List<List<HashMap<String, String>>> doInBackground(String... jsonData)
+    {
+
+      JSONObject jObject;
+      List<List<HashMap<String, String>>> routes = null;
+      try
+      {
+        jObject = new JSONObject(jsonData[0]);
+        DirectionsJSONParser parser = new DirectionsJSONParser();
+        routes = parser.parse(jObject);
+      } catch (Exception e)
+      {
+        e.printStackTrace();
+      }
+      return routes;
+    }
+
+    @Override
+    protected void onPostExecute(List<List<HashMap<String, String>>> result)
+    {
+      ArrayList<LatLng> points;
+      PolylineOptions lineOptions = null;
+
+      for (int i = 0; i < result.size(); i++)
+      {
+        points = new ArrayList<>();
+        lineOptions = new PolylineOptions();
+
+        List<HashMap<String, String>> path = result.get(i);
+
+        for (int j = 0; j < path.size(); j++)
+        {
+          HashMap<String, String> point = path.get(j);
+
+          double lat = Double.parseDouble(point.get("lat"));
+          double lng = Double.parseDouble(point.get("lng"));
+          LatLng position = new LatLng(lat, lng);
+
+          points.add(position);
+        }
+
+        lineOptions.addAll(points);
+        lineOptions.width(8);
+        lineOptions.color(Color.RED);
+      }
+
+      if (lineOptions != null)
+      {
+        if (mPolyline != null)
+        {
+          mPolyline.remove();
+        }
+        mPolyline = googlemap.addPolyline(lineOptions);
+      }
+      else
+      {
+        Toast.makeText(getApplicationContext(), "No route is found", Toast.LENGTH_LONG).show();
+      }
+    }
   }
 
   @Override
-  public void onStatusChanged(String provider, int status, Bundle extras)
+  public void onMapReady(GoogleMap map)
   {
-
+    googlemap = map;
+    if(checkMapPermission())
+    {
+      map.setMyLocationEnabled(true);
+      FusedLocationProviderClient fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+      fusedLocationClient.getLastLocation().addOnSuccessListener(this, new OnSuccessListener<Location>()
+      {
+        @Override
+        public void onSuccess(Location location)
+        {
+          if (location != null)
+          {
+            longitude = location.getLongitude();
+            latitude  = location.getLatitude();
+            userlocation = new LatLng(latitude, longitude);
+            googlemap.moveCamera(CameraUpdateFactory.newLatLngZoom(userlocation, zoomLevel));
+          }
+        }
+      });
+    }
+    else
+    {
+      Log.e("CheckPermission", "Request Permission" );
+    }
+    drawRoute();
   }
 
-  @Override
-  public void onProviderEnabled(String provider)
+  private double checkObesity(Integer rekomendasi)
   {
-
+    if(weightcategory == 2)
+    {
+      return rekomendasi + (rekomendasi * 0.008);
+    }
+    else
+    {
+      return rekomendasi;
+    }
   }
 
-  @Override
-  public void onProviderDisabled(String provider)
+  public void onActivityRecognitionStopClick(View view)
   {
-
+    Intent intent = new Intent(this, SimpanRekomendasiActivity.class);
+    intent.putExtra("jarak", jaraktempuh);
+    intent.putExtra("waktu", Integer.toString(totalwaktu));
+    intent.putExtra("rekomendasiawal", rekomendasiawal);
+    String rekomendasiakhir = String.valueOf((int) checkObesity(rekomendasi));
+    intent.putExtra("rekomendasiakhir", rekomendasiakhir);
+    startActivity(intent);
+    finish();
   }
 }

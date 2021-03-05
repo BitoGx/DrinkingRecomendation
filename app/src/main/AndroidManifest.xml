@@ -17,7 +17,8 @@
     android:supportsRtl="true"
     android:theme="@style/AppTheme"
     tools:ignore="AllowBackup">
-    <activity android:name=".SimpanRekomendasiActivity"></activity>
+    <activity android:name=".Rationale.PermissionRationalActivity"/>
+    <activity android:name=".SimpanRekomendasiActivity" />
     <activity
       android:name=".SliderActivity"
       android:theme="@style/AppTheme.NoActionBar">
